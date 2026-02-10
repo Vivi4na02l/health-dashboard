@@ -1,0 +1,28 @@
+:root {
+  --green: #8aff78;
+  --light-green: #e0ffd9;
+  --white: #fbfbfb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  background: var(--green);
+  background: linear-gradient(335deg, var(--green) 0%, #d0edca 51%, #fff 100%);
+}
+
+#app {
+  height: 100%;
+}
+
+.component {
+  border-radius: 1rem;
+}
