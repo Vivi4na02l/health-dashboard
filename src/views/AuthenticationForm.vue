@@ -45,12 +45,12 @@
 </template>
 
 <script>
+import { authStore } from "@/store/auth";
+
 export default {
   data() {
     return {
       isRegister: true,
-
-      users: [],
 
       register: {
         username: "",
@@ -65,10 +65,6 @@ export default {
     };
   },
 
-  created() {
-    this.users = localStorage.users ? JSON.parse(localStorage.getItem("users")) : [];
-  },
-
   methods: {
     toggleAuth() {
       this.isRegister = !this.isRegister;
@@ -77,7 +73,11 @@ export default {
     registerUser() {},
 
     loginUser() {
-      this.$router.push({ name: "Home" });
+      const useAuthStore = authStore();
+
+      if (useAuthStore.login(this.login.username, this.login.password)) {
+        this.$router.push({ name: "Home" });
+      }
     },
   },
 };

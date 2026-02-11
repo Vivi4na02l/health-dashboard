@@ -24,12 +24,23 @@
         </li>
       </ul>
 
-      <button class="btn-logout">Logout</button>
+      <button class="btn-logout" @click="logout()">Logout</button>
     </div>
   </nav>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts">
+export default {
+  data() {},
+
+  methods: {
+    logout() {
+      sessionStorage.removeItem("currentUser");
+      this.$router.push({ name: "Auth" });
+    },
+  },
+};
+</script>
 
 <style scoped>
 nav {
@@ -77,11 +88,16 @@ a {
 }
 
 .btn-logout {
+  cursor: pointer;
+
   border: none;
   border-radius: 100px;
   padding: 1rem;
 
   background-color: #c73c3c;
   color: #fff;
+}
+.btn-logout:hover {
+  background-color: #ae2b2b;
 }
 </style>
