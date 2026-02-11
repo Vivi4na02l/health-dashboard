@@ -4,7 +4,7 @@ import NavBar from "./components/NavBar.vue";
 
 <template>
   <div id="app">
-    <header>
+    <header v-if="!$route.meta.hideNavBar">
       <NavBar></NavBar>
     </header>
 
