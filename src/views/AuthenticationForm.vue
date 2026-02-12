@@ -70,7 +70,19 @@ export default {
       this.isRegister = !this.isRegister;
     },
 
-    registerUser() {},
+    registerUser() {
+      const useAuthStore = authStore();
+
+      if (
+        useAuthStore.register(
+          this.register.username,
+          this.register.password,
+          this.register.passwordRepeat,
+        )
+      ) {
+        this.toggleAuth();
+      }
+    },
 
     loginUser() {
       const useAuthStore = authStore();
