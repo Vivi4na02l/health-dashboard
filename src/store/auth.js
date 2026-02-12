@@ -29,16 +29,14 @@ export const authStore = defineStore("auth", {
             password: password,
           });
 
-          alert("Account created successfully");
-          return true;
+          return { gotRegistered: true, msg: "Account created successfully" };
 
           // if they don't match
         } else {
-          alert("The passwords don't match!");
-          return false;
+          return { gotRegistered: false, msg: "The passwords don't match!" };
         }
       } else {
-        alert("This username already exists!");
+        return { gotRegistered: false, msg: "This username already exists!" };
       }
     },
 
@@ -53,17 +51,15 @@ export const authStore = defineStore("auth", {
         if (user.password == password) {
           this.currentUser = user;
           sessionStorage.setItem("currentUser", JSON.stringify(user));
-          return true;
+          return { loginMade: true, msg: `Welcome, ${username}!` };
 
           // if they don't match
         } else {
-          alert("Password incorrect!");
-          return false;
+          return { loginMade: false, msg: "Password incorrect!" };
         }
       } else {
         // if user doesn't exist
-        alert("The user doesn't exist!");
-        return false;
+        return { loginMade: false, msg: "The user doesn't exist!" };
       }
     },
 

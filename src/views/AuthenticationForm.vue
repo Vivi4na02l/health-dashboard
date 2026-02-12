@@ -20,8 +20,10 @@
             v-model="register.passwordRepeat"
           />
 
+          <p v-if="msg != ''" :class="isSuccess ? 'success' : 'error'">{{ msg }}</p>
+
           <button type="submit">Create account</button>
-          <p @click="toggleAuth()">Já tenho uma conta.</p>
+          <p class="toggle" @click="toggleAuth()">Já tenho uma conta.</p>
         </form>
       </div>
 
@@ -34,10 +36,12 @@
           <input type="text" id="lUsername" name="username" v-model="login.username" />
 
           <label for="lPassword">Password:</label>
-          <input type="password" id="lPassword" name="username" v-model="login.password" />
+          <input type="password" id="lPassword" name="password" v-model="login.password" />
+
+          <p v-if="msg != ''" :class="isSuccess ? 'success' : 'error'">{{ msg }}</p>
 
           <button type="submit">Log in</button>
-          <p @click="toggleAuth()">Ainda não tenho uma conta.</p>
+          <p class="toggle" @click="toggleAuth()">Ainda não tenho uma conta.</p>
         </form>
       </div>
     </transition>
@@ -62,33 +66,50 @@ export default {
         username: "",
         password: "",
       },
+
+      msg: "",
+      isSuccess: null,
     };
   },
 
   methods: {
     toggleAuth() {
+      this.msg = "";
+      this.isSuccess = null;
       this.isRegister = !this.isRegister;
     },
 
     registerUser() {
       const useAuthStore = authStore();
 
-      if (
-        useAuthStore.register(
-          this.register.username,
-          this.register.password,
-          this.register.passwordRepeat,
-        )
-      ) {
-        this.toggleAuth();
+      const result = useAuthStore.register(
+        this.register.username,
+        this.register.password,
+        this.register.passwordRepeat,
+      );
+
+      this.msg = result.msg;
+      this.isSuccess = result.gotRegistered;
+
+      if (result.gotRegistered) {
+        setTimeout(() => {
+          this.toggleAuth();
+        }, 1000);
       }
     },
 
     loginUser() {
       const useAuthStore = authStore();
 
-      if (useAuthStore.login(this.login.username, this.login.password)) {
-        this.$router.push({ name: "Home" });
+      const result = useAuthStore.login(this.login.username, this.login.password);
+
+      this.msg = result.msg;
+      this.isSuccess = result.loginMade;
+
+      if (result.loginMade) {
+        setTimeout(() => {
+          this.$router.push({ name: "Home" });
+        }, 1000);
       }
     },
   },
@@ -158,13 +179,20 @@ button:hover {
   background-color: #6de15b;
 }
 
-p {
+.toggle {
   cursor: pointer;
 
   text-align: center;
   text-decoration: underline;
 }
-p:hover {
+.toggle:hover {
   color: #117e00;
+}
+
+.success {
+  color: #117e00;
+}
+.error {
+  color: #c73c3c;
 }
 </style>
