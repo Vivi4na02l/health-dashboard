@@ -3,24 +3,16 @@
     <h1>Health</h1>
 
     <div>
-      <ul>
-        <li class="active">
-          <a href="">Dashboard</a>
-        </li>
-        <li>
-          <a href="">Week day</a>
-        </li>
-        <li>
-          <a href="">Daily intakes</a>
-        </li>
-        <li>
-          <a href="">Pantry</a>
-        </li>
-        <li>
-          <a href="">Shopping list</a>
-        </li>
-        <li>
-          <a href="">Recipes</a>
+      <ul ref="navList">
+        <div class="slider" :style="sliderStyle"></div>
+
+        <li
+          v-for="item in items"
+          :key="item.key"
+          :class="{ active: show === item.key }"
+          @click="changePage(item.key, $event)"
+        >
+          {{ item.label }}
         </li>
       </ul>
 
@@ -29,14 +21,52 @@
   </nav>
 </template>
 
-<script lang="ts">
+<script>
 export default {
-  data() {},
+  data() {
+    return {
+      show: "main",
+
+      items: [
+        { key: "main", label: "Dashboard" },
+        { key: "week", label: "Week day" },
+        { key: "daily", label: "Daily intakes" },
+        { key: "pantry", label: "Pantry" },
+        { key: "shopping", label: "Shopping list" },
+        { key: "recipes", label: "Recipes" },
+      ],
+
+      sliderStyle: {
+        width: "0px",
+        transform: "translateX(0px)",
+      },
+    };
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      this.moveSlider(this.$el.querySelector(".active"));
+    });
+  },
 
   methods: {
     logout() {
       sessionStorage.removeItem("currentUser");
       this.$router.push({ name: "Auth" });
+    },
+
+    changePage(page) {
+      this.show = page;
+      this.moveSlider(event.currentTarget);
+    },
+
+    moveSlider(element) {
+      const { offsetLeft, offsetWidth } = element;
+
+      this.sliderStyle = {
+        width: offsetWidth + "px",
+        transform: `translateX(${offsetLeft}px)`,
+      };
     },
   },
 };
@@ -58,6 +88,8 @@ div {
 }
 
 ul {
+  position: relative;
+
   border-radius: 100px;
   padding: 0;
 
@@ -69,9 +101,31 @@ ul {
 }
 
 li {
+  cursor: pointer;
+
+  position: relative;
   padding: 1rem;
 
   list-style: none;
+  z-index: 2;
+}
+
+.slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  height: 100%;
+
+  border-radius: 100px;
+
+  color: #fff;
+  background: #000;
+
+  transition:
+    transform 0.3s ease,
+    width 0.3s ease;
+  z-index: 1;
 }
 
 a {
@@ -79,11 +133,6 @@ a {
 }
 
 .active {
-  border-radius: 100px;
-
-  background-color: #000;
-}
-.active a {
   color: var(--white);
 }
 
