@@ -3,7 +3,7 @@
     <h1>Health</h1>
 
     <div>
-      <ul ref="navList">
+      <ul>
         <div class="slider" :style="sliderStyle"></div>
 
         <li
@@ -49,6 +49,12 @@ export default {
     });
   },
 
+  watch: {
+    show() {
+      this.moveSlider(event.currentTarget);
+    },
+  },
+
   methods: {
     logout() {
       sessionStorage.removeItem("currentUser");
@@ -57,7 +63,6 @@ export default {
 
     changePage(page) {
       this.show = page;
-      this.moveSlider(event.currentTarget);
     },
 
     moveSlider(element) {
