@@ -3,19 +3,19 @@ import NavBar from "./components/NavBar.vue";
 </script>
 
 <template>
-  <router-view v-slot="{ Component }">
-    <transition name="fade" mode="out-in">
-      <div id="app" :key="$route.fullPath">
-        <header v-if="!$route.meta.hideNavBar">
-          <NavBar />
-        </header>
+  <div id="app" :key="$route.fullPath">
+    <header v-if="!$route.meta.hideNavBar">
+      <NavBar />
+    </header>
 
-        <main>
+    <main>
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
           <component :is="Component" />
-        </main>
-      </div>
-    </transition>
-  </router-view>
+        </transition>
+      </router-view>
+    </main>
+  </div>
 </template>
 
 <style scoped>

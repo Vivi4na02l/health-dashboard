@@ -1,8 +1,8 @@
 <template>
   <section class="component">
     <div id="day">
-      <p>02 FEV</p>
-      <h2>MONDAY</h2>
+      <p>{{ today.day }} {{ today.month }}</p>
+      <h2>{{ today.dayWeek }}</h2>
     </div>
 
     <div>
@@ -12,7 +12,35 @@
   </section>
 </template>
 
-<script lang="ts" setup></script>
+<script>
+export default {
+  data() {
+    return {
+      today: {
+        day: new Date().getDate(),
+        month: new Date().toLocaleString("en-UK", { month: "long" }),
+        dayWeek: new Intl.DateTimeFormat("en-UK", { weekday: "long" }).format(new Date()),
+      },
+    };
+  },
+
+  created() {
+    // this.getTodaysDate();
+  },
+
+  methods: {
+    getTodaysDate() {
+      const todayDate = new Date();
+      // const weekDays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday", "Sunday"]
+
+      this.today.dayWeek = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(todayDate);
+      console.log(this.today.dayWeek);
+
+      // this.today.day = ;
+    },
+  },
+};
+</script>
 
 <style scoped>
 section {

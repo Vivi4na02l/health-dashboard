@@ -2,12 +2,47 @@ import { createRouter, createWebHistory } from "vue-router";
 
 import MainPage from "@/views/MainPage.vue";
 import AuthenticationForm from "@/views/AuthenticationForm.vue";
+import WeekDay from "@/views/WeekDay.vue";
+import DailyIntakes from "@/views/DailyIntakes.vue";
+import PantryList from "@/views/PantryList.vue";
+import ShoppingList from "@/views/ShoppingList.vue";
+import RecipesList from "@/views/RecipesList.vue";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: MainPage,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/week-day",
+    name: "Week",
+    component: WeekDay,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/daily-intakes",
+    name: "Daily",
+    component: DailyIntakes,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/pantry",
+    name: "Pantry",
+    component: PantryList,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/shopping-list",
+    name: "Shopping",
+    component: ShoppingList,
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/recipes",
+    name: "Recipes",
+    component: RecipesList,
     meta: { requiresAuth: true },
   },
   {

@@ -30,3 +30,12 @@ body {
 .component {
   border-radius: 1rem;
 }
+
+.animHigher {
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0.44rem 0.44rem 0.44rem rgba(0, 0, 0, 0.195);
+}
+.animHigher:hover {
+  transform: translateY(-10px);
+  box-shadow: 0.625rem 1rem 0.3rem rgba(0, 0, 0, 0.111);
+}

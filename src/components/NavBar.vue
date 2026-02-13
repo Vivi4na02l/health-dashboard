@@ -9,7 +9,7 @@
         <li
           v-for="item in items"
           :key="item.key"
-          :class="{ active: show === item.key }"
+          :class="{ active: $route.name === item.key }"
           @click="changePage(item.key, $event)"
         >
           {{ item.label }}
@@ -25,15 +25,13 @@
 export default {
   data() {
     return {
-      show: "main",
-
       items: [
-        { key: "main", label: "Dashboard" },
-        { key: "week", label: "Week day" },
-        { key: "daily", label: "Daily intakes" },
-        { key: "pantry", label: "Pantry" },
-        { key: "shopping", label: "Shopping list" },
-        { key: "recipes", label: "Recipes" },
+        { key: "Home", label: "Dashboard" },
+        { key: "Week", label: "Week day" },
+        { key: "Daily", label: "Daily intakes" },
+        { key: "Pantry", label: "Pantry" },
+        { key: "Shopping", label: "Shopping list" },
+        { key: "Recipes", label: "Recipes" },
       ],
 
       sliderStyle: {
@@ -50,7 +48,7 @@ export default {
   },
 
   watch: {
-    show() {
+    $route() {
       this.moveSlider(event.currentTarget);
     },
   },
@@ -62,7 +60,7 @@ export default {
     },
 
     changePage(page) {
-      this.show = page;
+      this.$router.push({ name: `${page}` });
     },
 
     moveSlider(element) {

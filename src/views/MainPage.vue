@@ -1,14 +1,20 @@
 <template>
   <div>
     <!-- components in line 1: -->
-    <WeekDay class="span2"></WeekDay>
-    <WaterIntake></WaterIntake>
-    <ProteinIntake></ProteinIntake>
+    <WeekDay class="span2 animHigher" @click="this.$router.push({ name: 'Week' })"></WeekDay>
+    <WaterIntake class="animHigher" @click="this.$router.push({ name: 'Daily' })"></WaterIntake>
+    <ProteinIntake class="animHigher" @click="this.$router.push({ name: 'Daily' })"></ProteinIntake>
 
     <!-- components in line 2: -->
-    <PantryList></PantryList>
-    <ShoppingList></ShoppingList>
-    <RecipesList class="span2"></RecipesList>
+    <PantryList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></PantryList>
+    <ShoppingList
+      class="animHigher"
+      @click="this.$router.push({ name: 'Shopping' })"
+    ></ShoppingList>
+    <RecipesList
+      class="span2 animHigher"
+      @click="this.$router.push({ name: 'Recipes' })"
+    ></RecipesList>
   </div>
 </template>
 
