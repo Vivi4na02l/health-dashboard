@@ -3,7 +3,6 @@ import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/views/MainPage.vue";
 import AuthenticationForm from "@/views/AuthenticationForm.vue";
 import WeekDay from "@/views/WeekDay.vue";
-import DailyIntakes from "@/views/DailyIntakes.vue";
 import PantryList from "@/views/PantryList.vue";
 import ShoppingList from "@/views/ShoppingList.vue";
 import RecipesList from "@/views/RecipesList.vue";
@@ -19,12 +18,6 @@ const routes = [
     path: "/week-day",
     name: "Week",
     component: WeekDay,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/daily-intakes",
-    name: "Daily",
-    component: DailyIntakes,
     meta: { requiresAuth: true },
   },
   {

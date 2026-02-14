@@ -2,8 +2,8 @@
   <div>
     <!-- components in line 1: -->
     <WeekDay class="span2 animHigher" @click="this.$router.push({ name: 'Week' })"></WeekDay>
-    <WaterIntake class="animHigher"></WaterIntake>
-    <ProteinIntake class="animHigher"></ProteinIntake>
+    <WaterIntake></WaterIntake>
+    <ProteinIntake></ProteinIntake>
 
     <!-- components in line 2: -->
     <PantryList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></PantryList>
