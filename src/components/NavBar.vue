@@ -28,7 +28,6 @@ export default {
       items: [
         { key: "Home", label: "Dashboard" },
         { key: "Week", label: "Week day" },
-        { key: "Daily", label: "Daily intakes" },
         { key: "Pantry", label: "Pantry" },
         { key: "Shopping", label: "Shopping list" },
         { key: "Recipes", label: "Recipes" },
@@ -146,7 +145,7 @@ a {
   border-radius: 100px;
   padding: 1rem;
 
-  background-color: #c73c3c;
+  background-color: var(--red);
   color: #fff;
 }
 .btn-logout:hover {

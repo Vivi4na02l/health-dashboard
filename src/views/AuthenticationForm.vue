@@ -186,13 +186,13 @@ button:hover {
   text-decoration: underline;
 }
 .toggle:hover {
-  color: #117e00;
+  color: var(--dark-green);
 }
 
 .success {
-  color: #117e00;
+  color: var(--dark-green);
 }
 .error {
-  color: #c73c3c;
+  color: var(--red);
 }
 </style>
