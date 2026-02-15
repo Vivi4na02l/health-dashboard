@@ -9,7 +9,10 @@
 
       <form>
         <input type="text" id="txtIngredient" v-model="form.txtIngredient" required />
-        <input type="number" class="grams" v-model="form.grams" required />
+        <div id="gramsDiv">
+          <input type="number" id="gramsInput" v-model="form.grams" required />
+          <span>grams</span>
+        </div>
         <button type="submit">&#x2714;</button>
         <button>Add manually</button>
       </form>
@@ -25,11 +28,20 @@
 export default {
   data() {
     return {
+      isEditing: false,
+
       form: {
         txtIngredient: "",
         grams: 100,
       },
     };
+  },
+
+  methods: {
+    gramsShow() {
+      const gramsShow = this.form.grams + "g";
+      return gramsShow;
+    },
   },
 };
 </script>
@@ -45,7 +57,7 @@ section {
   justify-content: center;
 }
 
-section div {
+section > div {
   width: 40%;
 
   border-radius: 0.5rem;
@@ -62,18 +74,22 @@ form {
   height: 3rem;
 
   display: grid;
-  grid-template-columns: 4fr 1fr 1fr 2fr;
+  grid-template-columns: 3fr 2fr 1fr 2fr;
   gap: 0.5rem;
   align-items: stretch;
 }
 
-input,
+#txtIngredient,
+#gramsDiv,
 aside {
   border: solid 0.1rem #cbcbcb;
   border-radius: 0.5rem;
+
+  background-color: var(--white);
 }
 
 input {
+  field-sizing: content;
   text-align: center;
   font-size: 1rem;
 }
@@ -87,7 +103,41 @@ input {
   text-indent: 2rem;
 }
 
+#txtIngredient:focus {
+  outline: solid 1px #000;
+}
+
+#gramsDiv {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+}
+
+#gramsInput {
+  border: none;
+  background-color: transparent;
+}
+
+#gramsInput:focus {
+  outline: none;
+}
+
+#gramsDiv:focus-within {
+  outline: 1px solid #000;
+}
+
+#gramsDiv span {
+  cursor: default;
+
+  border-left: solid 0.1rem #cbcbcb;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  align-self: center;
+  font-size: 1rem;
+}
+
 button {
+  cursor: pointer;
+
   border: none;
   border-radius: 0.5rem;
   padding-left: 1rem;
