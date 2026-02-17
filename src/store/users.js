@@ -1,3 +1,4 @@
+import ShoppingList from "@/components/ShoppingList.vue";
 import { defineStore } from "pinia";
 
 export const usersStore = defineStore("users", {
@@ -9,20 +10,93 @@ export const usersStore = defineStore("users", {
             {
               username: "user",
               password: "1234",
+              ingredients: [
+                // {
+                //   ingredient: 'example',
+                //   weight: 10,
+                //   protein: 10,
+                // },
+              ],
+              pantry: [
+                // {
+                //   ingredient: 'example',
+                //   weight: 10,
+                //   protein: 10,
+                // },
+              ],
+              shopping: [
+                // {
+                //   ingredient: 'example',
+                //   weight: 10,
+                //   protein: 10,
+                // },
+              ],
+              recipes: [
+                // {
+                //   name: 'francesinha',
+                //   image: 'https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ',
+                //   description: 'sanduíche portuguesa deliciosa',
+                //   ingredientsList: [],
+                //   instructions: [],
+                // }
+              ],
             },
           ],
     };
   },
 
   actions: {
-    addUser(user) {
-      this.users.push(user);
+    /**
+     * adds new user created on register
+     * @param {*} username
+     * @param {*} password
+     */
+    addUser(username, password) {
+      this.users.push({
+        username: username,
+        password: password,
+        ingredients: [],
+        pantry: [],
+        shopping: [],
+        recipes: [],
+      });
 
       localStorage.users = JSON.stringify(this.users);
     },
 
+    /**
+     * returns full user data of the logged user
+     * @param {*} username
+     * @returns
+     */
     getUser(username) {
       return this.users.find((user) => user.username == username);
+    },
+
+    /**
+     * adds the ingredient the user typed manually to its ingredients array
+     * @param {*} ingredient
+     * @param {*} weight
+     * @param {*} protein
+     */
+    addManualIngredient(username, ingredient, weight, protein) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      if (!user.ingredients.find((ing) => ing.ingredient == ingredient)) {
+        user.ingredients.push({
+          ingredient: ingredient,
+          weight: +weight,
+          protein: +protein,
+        });
+
+        return { txt: "Ingredient added!", success: true };
+      } else {
+        return { txt: "This ingredient already exists!", success: false };
+      }
     },
   },
 });

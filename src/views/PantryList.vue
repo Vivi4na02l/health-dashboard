@@ -7,10 +7,10 @@
         and edit one yourself.
       </p>
 
-      <form @submit.prevent="formConfirm()">
+      <form class="formAPI" @submit.prevent="formConfirm()">
         <input type="text" id="txtIngredient" v-model="form.txtIngredient" />
         <div class="gramsDiv">
-          <input type="number" class="gramsInput" v-model="form.grams" />
+          <input type="number" class="gramsInput" min="1" v-model="form.grams" />
           <span>grams</span>
         </div>
         <button type="submit">&#x2714;</button>
@@ -28,29 +28,53 @@
             <h2>Add ingredient</h2>
           </header>
 
-          <div class="modal-body">
+          <form class="modal-body">
             <label for="txtIngredientManual">Ingredient:</label>
-            <input type="text" id="txtIngredientManual" />
+            <input
+              type="text"
+              id="txtIngredientManual"
+              v-model="modalForm.txtIngredient"
+              :style="
+                modalForm.submit && modalForm.txtIngredient == ''
+                  ? 'border: solid 0.1rem var(--red);'
+                  : null
+              "
+            />
 
-            <label for="nbrGramsManual">Weight</label>
+            <label for="nbrWeightManual">Weight</label>
             <div class="gramsDiv">
               <input
                 type="number"
                 class="gramsInput"
-                id="nbrGramsManual"
-                v-model="form.grams"
+                id="nbrWeightManual"
+                v-model="modalForm.nbrWeight"
+                min="1"
                 required
               />
               <span>grams</span>
             </div>
 
             <label for="nbrProteinManual">Protein</label>
-            <input type="number" id="nbrProteinManual" />
-          </div>
+            <div class="gramsDiv">
+              <input
+                type="number"
+                class="gramsInput"
+                id="nbrProteinManual"
+                v-model="modalForm.nbrProtein"
+                min="0"
+                required
+              />
+              <span>grams</span>
+            </div>
+
+            <p v-if="modalForm.msg.txt != ''" :class="modalForm.msg.success ? 'success' : 'error'">
+              {{ modalForm.msg.txt }}
+            </p>
+          </form>
 
           <footer>
-            <button id="btnConfirm">Confirm</button>
-            <button id="btnCancel" @click="modal = false">Cancel</button>
+            <button id="btnConfirm" @click="modalConfirm()">Confirm</button>
+            <button id="btnCancel" @click="modalCancel()">Cancel</button>
           </footer>
         </div>
       </div>
@@ -61,6 +85,9 @@
 </template>
 
 <script lang="ts">
+import { authStore } from "@/store/auth";
+import { usersStore } from "@/store/users";
+
 export default {
   data() {
     return {
@@ -71,6 +98,17 @@ export default {
         grams: 100,
       },
 
+      modalForm: {
+        submit: false,
+        msg: {
+          txt: "",
+          success: false,
+        },
+        txtIngredient: "",
+        nbrWeight: 100,
+        nbrProtein: 0,
+      },
+
       modal: false,
     };
   },
@@ -78,7 +116,41 @@ export default {
   methods: {
     formConfirm() {},
 
-    modalConfirm() {},
+    modalConfirm() {
+      const auth = authStore();
+      const users = usersStore();
+
+      this.modalForm.submit = true; // responsible for making the inputs border red, if they're empty
+
+      if (
+        this.modalForm.txtIngredient === "" ||
+        this.modalForm.nbrWeight === "" ||
+        this.modalForm.nbrProtein === ""
+      ) {
+        this.modalForm.msg.txt = "All the contents must be filled!";
+      } else {
+        const result = users.addManualIngredient(
+          auth.currentUsername,
+          this.modalForm.txtIngredient,
+          this.modalForm.nbrWeight,
+          this.modalForm.nbrProtein,
+        );
+
+        console.log(result);
+        this.modalForm.msg.txt = result.txt;
+        this.modalForm.msg.success = result.success;
+
+        if (result.success) {
+          this.modalForm.submit = false;
+        }
+      }
+    },
+
+    modalCancel() {
+      this.modal = false;
+      this.modalForm.submit = false;
+      this.modalForm.msg.txt = "";
+    },
   },
 };
 </script>
@@ -109,7 +181,7 @@ section > div {
   margin: 0 0 0.5rem 0;
 }
 
-form {
+.formAPI {
   height: 3rem;
 
   display: grid;
@@ -120,7 +192,6 @@ form {
 
 /* input style */
 #txtIngredientManual,
-#nbrProteinManual,
 #txtIngredient,
 .gramsDiv,
 aside {
@@ -201,6 +272,10 @@ aside {
 aside p {
   width: 100%;
   text-align: center;
+}
+
+.redBorder {
+  border: solid 0.1rem var(--red);
 }
 
 /* modal */

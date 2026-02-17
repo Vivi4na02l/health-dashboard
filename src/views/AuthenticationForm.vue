@@ -188,11 +188,4 @@ button:hover {
 .toggle:hover {
   color: var(--dark-green);
 }
-
-.success {
-  color: var(--dark-green);
-}
-.error {
-  color: var(--red);
-}
 </style>

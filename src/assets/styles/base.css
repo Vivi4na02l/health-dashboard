@@ -6,6 +6,13 @@
   --white: #fbfbfb;
 }
 
+.success {
+  color: var(--dark-green);
+}
+.error {
+  color: var(--red);
+}
+
 * {
   box-sizing: border-box;
 }

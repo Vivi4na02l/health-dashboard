@@ -4,30 +4,32 @@ import { usersStore } from "./users";
 export const authStore = defineStore("auth", {
   state() {
     return {
-      currentUser: JSON.parse(sessionStorage.getItem("currentUser")) || null,
+      currentUsername: JSON.parse(sessionStorage.getItem("currentUsername")) || null,
     };
   },
 
   getters: {
     isAuthenticated(state) {
-      return !!state.currentUser;
+      return !!state.currentUsername;
+    },
+
+    currentUserData() {
+      const users = usersStore();
+      return users.getUser(this.currentUsername);
     },
   },
 
   actions: {
     register(username, password, passwordR) {
-      const useUsersStore = usersStore();
-      const user = useUsersStore.getUser(username);
+      const users = usersStore();
+      const user = users.getUser(username);
 
       if (!user) {
         // if user doesn't exist
 
         // if passwords match
         if (password == passwordR) {
-          useUsersStore.addUser({
-            username: username,
-            password: password,
-          });
+          users.addUser(username, password);
 
           return { gotRegistered: true, msg: "Account created successfully" };
 
@@ -41,16 +43,16 @@ export const authStore = defineStore("auth", {
     },
 
     login(username, password) {
-      const useUsersStore = usersStore();
-      const user = useUsersStore.getUser(username);
+      const users = usersStore();
+      const user = users.getUser(username);
 
       if (user) {
         // if user exists
 
         // if passwords match
         if (user.password == password) {
-          this.currentUser = user;
-          sessionStorage.setItem("currentUser", JSON.stringify(user));
+          this.currentUsername = username;
+          sessionStorage.setItem("currentUsername", this.currentUsername);
           return { loginMade: true, msg: `Welcome, ${username}!` };
 
           // if they don't match
@@ -64,8 +66,8 @@ export const authStore = defineStore("auth", {
     },
 
     logout() {
-      this.currentUser = null;
-      sessionStorage.removeItem("currentUser");
+      this.currentUsername = null;
+      sessionStorage.removeItem("currentUsername");
     },
   },
 });

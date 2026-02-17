@@ -52,7 +52,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  const isLoggedIn = sessionStorage.currentUser ? true : false;
+  const isLoggedIn = sessionStorage.currentUsername ? true : false;
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return { name: "Auth" };
