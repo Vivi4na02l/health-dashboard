@@ -80,7 +80,27 @@
       </div>
     </div>
 
-    <div></div>
+    <!-- catalog -->
+    <div>
+      <article v-for="ingredient of user.ingredients" :key="ingredient.key">
+        <!-- <input type="checkbox" name="" id="" /> -->
+
+        <div class="ingredientInfo">
+          <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
+          <span>
+            <p class="ingredientDetails">
+              {{ ingredient.protein }}g of protein per {{ ingredient.weight }}g
+            </p>
+          </span>
+        </div>
+
+        <div class="ingredientQuantity">
+          <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, false)">-</div>
+          <p>{{ ingredient.quantity }}</p>
+          <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">+</div>
+        </div>
+      </article>
+    </div>
   </section>
 </template>
 
@@ -91,6 +111,8 @@ import { usersStore } from "@/store/users";
 export default {
   data() {
     return {
+      user: { ingredients: [] },
+
       isEditing: false,
 
       form: {
@@ -113,7 +135,18 @@ export default {
     };
   },
 
+  created() {
+    this.getIngredients();
+  },
+
   methods: {
+    getIngredients() {
+      const auth = authStore();
+      const user = usersStore().getUser(auth.currentUsername);
+
+      this.user = user;
+    },
+
     formConfirm() {},
 
     modalConfirm() {
@@ -142,6 +175,7 @@ export default {
 
         if (result.success) {
           this.modalForm.submit = false;
+          this.getIngredients();
         }
       }
     },
@@ -150,6 +184,11 @@ export default {
       this.modal = false;
       this.modalForm.submit = false;
       this.modalForm.msg.txt = "";
+    },
+
+    changeQuantity(ingredient, isPlus) {
+      const auth = authStore();
+      usersStore().changeIngredient(auth.currentUsername, ingredient, isPlus);
     },
   },
 };
@@ -340,5 +379,60 @@ aside p {
 }
 .modal #btnCancel:hover {
   background-color: #00000023;
+}
+
+article {
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: var(--white);
+
+  display: flex;
+}
+
+article p {
+  margin: 0;
+}
+
+article .ingredientInfo {
+  width: 100%;
+
+  margin-left: 1rem;
+}
+
+article .ingredientQuantity {
+  display: flex;
+  align-items: center;
+}
+
+article .btnQuantity {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 0.5rem;
+  border: solid #000 0.1rem;
+}
+
+article .btnQuantity:hover {
+  cursor: pointer;
+
+  background-color: #00000023;
+}
+
+article .ingredientQuantity p {
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+
+  font-size: 1.2rem;
+}
+
+input[type="checkbox"] {
+  width: 1rem;
+}
+
+.ingredientTitle {
+  font-size: 1.5rem;
 }
 </style>

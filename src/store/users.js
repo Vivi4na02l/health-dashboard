@@ -15,6 +15,7 @@ export const usersStore = defineStore("users", {
                 //   ingredient: 'example',
                 //   weight: 10,
                 //   protein: 10,
+                //   quantity: 1,
                 // },
               ],
               pantry: [
@@ -46,6 +47,11 @@ export const usersStore = defineStore("users", {
   },
 
   actions: {
+    updateArray() {
+      // this.users = users;
+      localStorage.users = JSON.stringify(this.users);
+    },
+
     /**
      * adds new user created on register
      * @param {*} username
@@ -61,7 +67,7 @@ export const usersStore = defineStore("users", {
         recipes: [],
       });
 
-      localStorage.users = JSON.stringify(this.users);
+      this.updateArray();
     },
 
     /**
@@ -91,11 +97,42 @@ export const usersStore = defineStore("users", {
           ingredient: ingredient,
           weight: +weight,
           protein: +protein,
+          quantity: 1,
         });
+
+        this.updateArray();
 
         return { txt: "Ingredient added!", success: true };
       } else {
         return { txt: "This ingredient already exists!", success: false };
+      }
+    },
+
+    /**
+     * changes the quantity of the ingredient triggered
+     * @param {*} username user logged in
+     * @param {*} ingredient ingredient of which the button as been clicked
+     * @param {*} isPlus is true if the button clicked was "plus", false if it was the button "minus"
+     */
+    changeIngredient(username, ingredient, isPlus) {
+      const user = this.getUser(username);
+      const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
+
+      // increases the quantity
+      if (isPlus) {
+        user.ingredients[ingredientIndex].quantity++;
+
+        this.updateArray();
+      }
+
+      // decreases the quantity
+      else {
+        // only decreases the quantity of the ingredient if it isn't already at 0 quantity
+        if (user.ingredients[ingredientIndex].quantity > 0) {
+          user.ingredients[ingredientIndex].quantity--;
+        }
+
+        this.updateArray();
       }
     },
   },
