@@ -81,25 +81,64 @@
     </div>
 
     <!-- catalog -->
-    <div>
-      <article v-for="ingredient of user.ingredients" :key="ingredient.key">
-        <!-- <input type="checkbox" name="" id="" /> -->
+    <div class="catalog">
+      <header>
+        <div :class="onPantry ? 'active' : 'inactive'" @click="onPantry = true">On pantry</div>
+        <div :class="onPantry ? 'inactive' : 'active'" @click="onPantry = false">Ran out of</div>
+      </header>
 
-        <div class="ingredientInfo">
-          <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
-          <span>
-            <p class="ingredientDetails">
-              {{ ingredient.protein }}g of protein per {{ ingredient.weight }}g
-            </p>
-          </span>
-        </div>
+      <div v-if="onPantry">
+        <article
+          v-for="ingredient of user.ingredients"
+          :key="ingredient.key"
+          v-show="ingredient.quantity >= 1"
+          class="pantry"
+        >
+          <!-- <input type="checkbox" name="" id="" /> -->
 
-        <div class="ingredientQuantity">
-          <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, false)">-</div>
-          <p>{{ ingredient.quantity }}</p>
-          <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">+</div>
-        </div>
-      </article>
+          <div class="ingredientInfo">
+            <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
+            <span>
+              <p class="ingredientDetails">
+                {{ ingredient.protein }}g of protein per {{ ingredient.weight }}g
+              </p>
+            </span>
+          </div>
+
+          <div class="ingredientQuantity">
+            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, false)">-</div>
+            <p>{{ ingredient.quantity }}</p>
+            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">+</div>
+          </div>
+        </article>
+      </div>
+
+      <div v-else>
+        <article
+          v-for="ingredient of user.ingredients"
+          :key="ingredient.key"
+          v-show="ingredient.quantity == 0"
+          class="ranOut"
+        >
+          <!-- <input type="checkbox" name="" id="" /> -->
+
+          <div class="ingredientInfo">
+            <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
+            <span>
+              <p class="ingredientDetails">
+                {{ ingredient.protein }}g of protein per {{ ingredient.weight }}g
+              </p>
+            </span>
+          </div>
+
+          <div class="ingredientQuantity">
+            <div class="btnQuantity">Shopping list</div>
+            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">
+              Back to pantry
+            </div>
+          </div>
+        </article>
+      </div>
     </div>
   </section>
 </template>
@@ -112,6 +151,8 @@ export default {
   data() {
     return {
       user: { ingredients: [] },
+
+      onPantry: true,
 
       isEditing: false,
 
@@ -381,6 +422,40 @@ aside p {
   background-color: #00000023;
 }
 
+.catalog {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.catalog header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.catalog header div {
+  cursor: pointer;
+
+  border-radius: 0.5rem;
+  border: solid 0.1rem #000;
+  padding: 1rem;
+
+  text-align: center;
+}
+
+.catalog .active {
+  background-color: #000;
+  color: var(--white);
+}
+.catalog .active:hover {
+  background-color: #000000d7;
+}
+
+.catalog .inactive:hover {
+  background-color: #0000002c;
+}
+
 article {
   border-radius: 0.5rem;
   padding: 1rem;
@@ -395,24 +470,37 @@ article p {
 
 article .ingredientInfo {
   width: 100%;
-
-  margin-left: 1rem;
 }
 
-article .ingredientQuantity {
+.pantry .ingredientQuantity {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
-article .btnQuantity {
-  width: 2rem;
-  height: 2rem;
+.ranOut .ingredientQuantity {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.btnQuantity {
   display: flex;
   align-items: center;
   justify-content: center;
 
   border-radius: 0.5rem;
   border: solid #000 0.1rem;
+}
+
+.pantry .btnQuantity {
+  width: 2rem;
+  height: 2rem;
+}
+
+.ranOut .btnQuantity {
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 article .btnQuantity:hover {
@@ -422,9 +510,6 @@ article .btnQuantity:hover {
 }
 
 article .ingredientQuantity p {
-  margin-left: 0.5rem;
-  margin-right: 0.5rem;
-
   font-size: 1.2rem;
 }
 
