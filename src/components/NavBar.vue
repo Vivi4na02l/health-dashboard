@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { authStore } from "@/store/auth";
+
 export default {
   data() {
     return {
@@ -54,7 +56,7 @@ export default {
 
   methods: {
     logout() {
-      sessionStorage.removeItem("currentUser");
+      authStore().logout();
       this.$router.push({ name: "Auth" });
     },
 

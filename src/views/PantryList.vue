@@ -92,12 +92,12 @@
         <button type="submit">Add to list</button>
       </header>
 
-      <div>
+      <div class="body">
         <!-- v-if="onTab == 'pantry'" -->
         <article
           v-for="ingredient of user.ingredients"
           :key="ingredient.key"
-          v-show="listArrayChange(ingredient)"
+          v-show="listChange(ingredient)"
           class="pantry"
         >
           <!-- <input type="checkbox" name="" id="" /> -->
@@ -112,14 +112,23 @@
           </div>
 
           <div class="pantryIngredientQuantity" v-if="onTab == 'pantry'">
-            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, false)">-</div>
+            <div
+              class="btnQuantity"
+              @click="changeIngredientQuantity(ingredient.ingredient, false)"
+            >
+              -
+            </div>
             <p>{{ ingredient.quantity }}</p>
-            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">+</div>
+            <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
+              +
+            </div>
           </div>
 
           <div class="ranOutIngredientQuantity" v-else-if="onTab == 'ranOut'">
-            <div class="btnQuantity">Shopping list</div>
-            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">
+            <div class="btnQuantity" @click="changeIngredientList(ingredient.ingredient, true)">
+              Shopping list
+            </div>
+            <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
               Back to pantry
             </div>
           </div>
@@ -146,7 +155,7 @@
 
           <div class="ingredientQuantity">
             <div class="btnQuantity">Shopping list</div>
-            <div class="btnQuantity" @click="changeQuantity(ingredient.ingredient, true)">
+            <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
               Back to pantry
             </div>
           </div>
@@ -195,23 +204,15 @@ export default {
     this.getIngredients();
   },
 
-  watch: {
-    onTab() {
-      this.listArrayChange(this.user);
-    },
-  },
-
   methods: {
     getIngredients() {
       const auth = authStore();
       const user = usersStore().getUser(auth.currentUsername);
 
       this.user = user;
-
-      this.listArrayChange(user);
     },
 
-    listArrayChange(ingredient) {
+    listChange(ingredient) {
       if (this.onTab == "pantry") {
         if (ingredient.quantity >= 1 && !ingredient.onShoppingList) {
           return true;
@@ -264,9 +265,14 @@ export default {
       this.modalForm.msg.txt = "";
     },
 
-    changeQuantity(ingredient, isPlus) {
+    changeIngredientQuantity(ingredient, isPlus) {
       const auth = authStore();
-      usersStore().changeIngredient(auth.currentUsername, ingredient, isPlus);
+      usersStore().changeIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+    },
+
+    changeIngredientList(ingredient, toShoppingList) {
+      const auth = authStore();
+      usersStore().changeIngredientList(auth.currentUsername, ingredient, toShoppingList);
     },
   },
 };
@@ -493,6 +499,12 @@ aside p {
 
 .catalog .inactive:hover {
   background-color: #0000002c;
+}
+
+.catalog .body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 article {

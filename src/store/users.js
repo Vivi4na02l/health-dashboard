@@ -49,8 +49,6 @@ export const usersStore = defineStore("users", {
         username: username,
         password: password,
         ingredients: [],
-        pantry: [],
-        shopping: [],
         recipes: [],
       });
 
@@ -85,6 +83,7 @@ export const usersStore = defineStore("users", {
           weight: +weight,
           protein: +protein,
           quantity: 1,
+          onShoppingList: false,
         });
 
         this.updateArray();
@@ -101,7 +100,7 @@ export const usersStore = defineStore("users", {
      * @param {*} ingredient ingredient of which the button as been clicked
      * @param {*} isPlus is true if the button clicked was "plus", false if it was the button "minus"
      */
-    changeIngredient(username, ingredient, isPlus) {
+    changeIngredientQuantity(username, ingredient, isPlus) {
       const user = this.getUser(username);
       const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
 
@@ -120,6 +119,17 @@ export const usersStore = defineStore("users", {
         }
 
         this.updateArray();
+      }
+    },
+
+    changeIngredientList(username, ingredient, toShoppingList) {
+      const user = this.getUser(username);
+      const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
+
+      if (toShoppingList) {
+        user.ingredients[ingredientIndex].onShoppingList = true;
+      } else {
+        user.ingredients[ingredientIndex].onShoppingList = false;
       }
     },
   },
