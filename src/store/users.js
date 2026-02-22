@@ -16,20 +16,7 @@ export const usersStore = defineStore("users", {
                 //   weight: 10,
                 //   protein: 10,
                 //   quantity: 1,
-                // },
-              ],
-              pantry: [
-                // {
-                //   ingredient: 'example',
-                //   weight: 10,
-                //   protein: 10,
-                // },
-              ],
-              shopping: [
-                // {
-                //   ingredient: 'example',
-                //   weight: 10,
-                //   protein: 10,
+                //   onShoppingList: false,
                 // },
               ],
               recipes: [
