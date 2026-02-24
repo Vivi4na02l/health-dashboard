@@ -1,82 +1,85 @@
 <template>
   <section>
-    <!-- form -->
-    <div>
-      <p class="intro">
-        Search for an ingredient where we will estimate the amount of its nutrients. Or manually add
-        and edit one yourself.
-      </p>
+    <!-- modal -->
+    <div v-show="modal" class="modal">
+      <div>
+        <header>
+          <h2>Add ingredient</h2>
+          <select name="addIngredient" v-model="searchForm">
+            <option value="searching">Searching</option>
+            <option value="manually">Manually</option>
+          </select>
+        </header>
 
-      <form class="formAPI" @submit.prevent="formConfirm()">
-        <input type="text" id="txtIngredient" v-model="form.txtIngredient" />
-        <div class="gramsDiv">
-          <input type="number" class="gramsInput" min="1" v-model="form.grams" />
-          <span>grams</span>
-        </div>
-        <button type="submit">&#x2714;</button>
-        <button @click="modal = true">Add manually</button>
-      </form>
+        <div v-if="searchForm == 'searching'" class="modal-body-search">
+          <p class="intro">
+            Search for an ingredient where we will estimate the amount of its nutrients. Or manually
+            add and edit one yourself.
+          </p>
 
-      <aside>
-        <p>Type an ingredient for results...</p>
-      </aside>
-
-      <!-- modal -->
-      <div v-show="modal" class="modal">
-        <div>
-          <header>
-            <h2>Add ingredient</h2>
-          </header>
-
-          <form class="modal-body">
-            <label for="txtIngredientManual">Ingredient:</label>
-            <input
-              type="text"
-              id="txtIngredientManual"
-              v-model="modalForm.txtIngredient"
-              :style="
-                modalForm.submit && modalForm.txtIngredient == ''
-                  ? 'border: solid 0.1rem var(--red);'
-                  : null
-              "
-            />
-
-            <label for="nbrWeightManual">Weight</label>
+          <form class="formAPI" @submit.prevent="formConfirm()">
+            <input type="text" id="txtIngredient" v-model="form.txtIngredient" />
             <div class="gramsDiv">
-              <input
-                type="number"
-                class="gramsInput"
-                id="nbrWeightManual"
-                v-model="modalForm.nbrWeight"
-                min="1"
-                required
-              />
+              <input type="number" class="gramsInput" min="1" v-model="form.grams" />
               <span>grams</span>
             </div>
-
-            <label for="nbrProteinManual">Protein</label>
-            <div class="gramsDiv">
-              <input
-                type="number"
-                class="gramsInput"
-                id="nbrProteinManual"
-                v-model="modalForm.nbrProtein"
-                min="0"
-                required
-              />
-              <span>grams</span>
-            </div>
-
-            <p v-if="modalForm.msg.txt != ''" :class="modalForm.msg.success ? 'success' : 'error'">
-              {{ modalForm.msg.txt }}
-            </p>
+            <button type="submit">&#x2714;</button>
+            <button>Add manually</button>
           </form>
 
-          <footer>
-            <button id="btnConfirm" @click="modalConfirm()">Confirm</button>
-            <button id="btnCancel" @click="modalCancel()">Cancel</button>
-          </footer>
+          <aside>
+            <p>Type an ingredient for results...</p>
+          </aside>
         </div>
+
+        <form v-else class="modal-body">
+          <label for="txtIngredientManual">Ingredient:</label>
+          <input
+            type="text"
+            id="txtIngredientManual"
+            v-model="modalForm.txtIngredient"
+            :style="
+              modalForm.submit && modalForm.txtIngredient == ''
+                ? 'border: solid 0.1rem var(--red);'
+                : null
+            "
+          />
+
+          <label for="nbrWeightManual">Weight</label>
+          <div class="gramsDiv">
+            <input
+              type="number"
+              class="gramsInput"
+              id="nbrWeightManual"
+              v-model="modalForm.nbrWeight"
+              min="1"
+              required
+            />
+            <span>grams</span>
+          </div>
+
+          <label for="nbrProteinManual">Protein</label>
+          <div class="gramsDiv">
+            <input
+              type="number"
+              class="gramsInput"
+              id="nbrProteinManual"
+              v-model="modalForm.nbrProtein"
+              min="0"
+              required
+            />
+            <span>grams</span>
+          </div>
+
+          <p v-if="modalForm.msg.txt != ''" :class="modalForm.msg.success ? 'success' : 'error'">
+            {{ modalForm.msg.txt }}
+          </p>
+        </form>
+
+        <footer>
+          <button id="btnConfirm" @click="modalConfirm()">Confirm</button>
+          <button id="btnCancel" @click="modalCancel()">Cancel</button>
+        </footer>
       </div>
     </div>
 
@@ -88,7 +91,7 @@
           <option value="shopping">Shopping list</option>
         </select>
 
-        <button type="submit">Add to list</button>
+        <button type="submit" @click="modal = true">Add to list</button>
       </header>
 
       <div class="body">
@@ -182,6 +185,8 @@ export default {
       // userCopy: [],
 
       // listArray: [],
+
+      searchForm: "searching",
 
       onTab: "pantry",
 
@@ -346,15 +351,6 @@ section {
   gap: 1rem;
 }
 
-section > div {
-  width: 40%;
-
-  border-radius: 0.5rem;
-  padding: 2rem;
-
-  background-color: var(--light-green);
-}
-
 .intro {
   margin: 0 0 0.5rem 0;
 }
@@ -365,7 +361,6 @@ section > div {
   display: grid;
   grid-template-columns: 3fr 2fr 1fr 2fr;
   gap: 0.5rem;
-  align-items: stretch;
 }
 
 /* input style */
@@ -473,7 +468,8 @@ aside p {
 }
 
 .modal h2 {
-  margin: 0 0 1rem 0;
+  margin: 0;
+  padding: 0;
 }
 
 .modal > div {
@@ -487,6 +483,22 @@ aside p {
 
 .modal header {
   border-bottom: solid 0.1rem #000;
+  padding-bottom: 1rem;
+
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.modal header select {
+  cursor: pointer;
+
+  border-radius: 0.5rem;
+  border: solid 0.1rem #cbcbcb;
+  padding: 0.5rem;
+
+  text-align: center;
+  font-size: 1.1rem;
 }
 
 .modal-body {
@@ -501,6 +513,11 @@ aside p {
 .modal-body input,
 .modal footer button {
   height: 2rem;
+}
+
+.modal-body-search {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .modal footer {
@@ -521,9 +538,16 @@ aside p {
 }
 
 .catalog {
+  width: 40%;
+
+  border-radius: 0.5rem;
+  padding: 2rem;
+
   display: flex;
   flex-direction: column;
   gap: 1rem;
+
+  background-color: var(--light-green);
 }
 
 .catalog header {
