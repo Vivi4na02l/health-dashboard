@@ -126,11 +126,17 @@ export const usersStore = defineStore("users", {
       const user = this.getUser(username);
       const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
 
-      if (toShoppingList) {
-        user.ingredients[ingredientIndex].onShoppingList = true;
-      } else {
-        user.ingredients[ingredientIndex].onShoppingList = false;
+      if (toShoppingList == null) {
+        if (user.ingredients[ingredientIndex].onShoppingList == true) {
+          toShoppingList = false;
+        } else {
+          toShoppingList = true;
+        }
       }
+
+      user.ingredients[ingredientIndex].onShoppingList = toShoppingList;
+
+      this.updateArray();
     },
   },
 });

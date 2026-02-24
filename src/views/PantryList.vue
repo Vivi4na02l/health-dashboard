@@ -86,7 +86,6 @@
         <select name="onTab" v-model="onTab">
           <option value="pantry">Pantry</option>
           <option value="shopping">Shopping list</option>
-          <option value="ranOut">Ran out of</option>
         </select>
 
         <button type="submit">Add to list</button>
@@ -95,13 +94,20 @@
       <div class="body">
         <!-- v-if="onTab == 'pantry'" -->
         <article
-          v-for="ingredient of user.ingredients"
+          v-for="ingredient of getIngredients"
           :key="ingredient.key"
           v-show="listChange(ingredient)"
-          class="pantry"
+          :class="arrangeStructure(ingredient)"
         >
-          <!-- <input type="checkbox" name="" id="" /> -->
+          <!-- checkbox for shopping list -->
+          <input
+            v-show="arrangeStructure(ingredient) == 'shopping' ? true : false"
+            type="checkbox"
+            name=""
+            id=""
+          />
 
+          <!-- ingredient name and its info -->
           <div class="ingredientInfo">
             <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
             <span>
@@ -111,7 +117,11 @@
             </span>
           </div>
 
-          <div class="pantryIngredientQuantity" v-if="onTab == 'pantry'">
+          <!-- to increase or decrease quantity of ingredient -->
+          <div
+            class="pantryIngredientQuantity"
+            v-if="(onTab == 'pantry' && ingredient.quantity > 0) || onTab == 'shopping'"
+          >
             <div
               class="btnQuantity"
               @click="changeIngredientQuantity(ingredient.ingredient, false)"
@@ -124,43 +134,39 @@
             </div>
           </div>
 
-          <div class="ranOutIngredientQuantity" v-else-if="onTab == 'ranOut'">
-            <div class="btnQuantity" @click="changeIngredientList(ingredient.ingredient, true)">
-              Shopping list
+          <div
+            class="ranOutIngredientQuantity"
+            v-if="onTab == 'pantry' && ingredient.quantity == 0"
+          >
+            <div
+              :class="ingredient.onShoppingList ? 'btnQuantity active' : 'btnQuantity inactive'"
+              @click="changeIngredientList(ingredient.ingredient, null)"
+            >
+              <p v-if="!ingredient.onShoppingList">Shopping list</p>
+              <p v-else>On shopping list</p>
             </div>
-            <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
+            <div
+              class="btnQuantity"
+              @click="
+                (changeIngredientQuantity(ingredient.ingredient, true),
+                changeIngredientList(ingredient.ingredient, false))
+              "
+            >
               Back to pantry
             </div>
           </div>
+
+          <div
+            class="btnRemove"
+            v-if="arrangeStructure(ingredient) == 'shopping' ? true : false"
+            @click="changeIngredientList(ingredient.ingredient, false)"
+          >
+            <img src="../assets/images/icon-close-black.png" alt="black cross close button" />
+          </div>
         </article>
+
+        <button class="btnComplete">Complete grocery shopping</button>
       </div>
-
-      <!-- <div v-else>
-        <article
-          v-for="ingredient of user.ingredients"
-          :key="ingredient.key"
-          v-show="ingredient.quantity == 0"
-          class="ranOut"
-        >
-          <!- <input type="checkbox" name="" id="" /> ->
-
-          <div class="ingredientInfo">
-            <p class="ingredientTitle">{{ ingredient.ingredient }}</p>
-            <span>
-              <p class="ingredientDetails">
-                {{ ingredient.protein }}g of protein per {{ ingredient.weight }}g
-              </p>
-            </span>
-          </div>
-
-          <div class="ingredientQuantity">
-            <div class="btnQuantity">Shopping list</div>
-            <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
-              Back to pantry
-            </div>
-          </div>
-        </article>
-      </div> -->
     </div>
   </section>
 </template>
@@ -172,9 +178,10 @@ import { usersStore } from "@/store/users";
 export default {
   data() {
     return {
-      user: { ingredients: [] },
+      // user: { ingredients: [] },
+      // userCopy: [],
 
-      listArray: [],
+      // listArray: [],
 
       onTab: "pantry",
 
@@ -200,28 +207,60 @@ export default {
     };
   },
 
-  created() {
-    this.getIngredients();
+  // created() {
+  //   this.getIngredients();
+  // },
+
+  computed: {
+    user() {
+      const auth = authStore();
+      return usersStore().getUser(auth.currentUsername);
+    },
+
+    getIngredients() {
+      if (!this.user) {
+        return [];
+      }
+
+      return [...this.user.ingredients].sort((a, b) => {
+        if (a.quantity == 0 && b.quantity != 0) {
+          return 1;
+        }
+
+        if (a.quantity != 0 && b.quantity == 0) {
+          return -1;
+        }
+
+        return 0;
+      });
+    },
   },
 
   methods: {
-    getIngredients() {
-      const auth = authStore();
-      const user = usersStore().getUser(auth.currentUsername);
+    // getIngredients() {
+    //   console.log("olá :)");
 
-      this.user = user;
-    },
+    //   const auth = authStore();
+    //   const user = usersStore().getUser(auth.currentUsername);
+
+    //   this.user = user;
+    //   this.userCopy = [...user.ingredients];
+    // },
 
     listChange(ingredient) {
       if (this.onTab == "pantry") {
-        if (ingredient.quantity >= 1 && !ingredient.onShoppingList) {
-          return true;
-        }
+        // if (ingredient.quantity) {
+        return true;
+        // }
       } else if (this.onTab == "shopping" && ingredient.onShoppingList) {
         return true;
-      } else if (this.onTab == "ranOut" && ingredient.quantity == 0) {
+      }
+      //comment
+      else if (this.onTab == "ranOut" && ingredient.quantity == 0) {
         return true;
-      } else {
+      }
+      //comment
+      else {
         return false;
       }
     },
@@ -273,6 +312,22 @@ export default {
     changeIngredientList(ingredient, toShoppingList) {
       const auth = authStore();
       usersStore().changeIngredientList(auth.currentUsername, ingredient, toShoppingList);
+    },
+
+    arrangeStructure(ingredient) {
+      if (this.onTab == "pantry") {
+        if (ingredient.quantity > 0) {
+          return "pantry";
+        } else {
+          return "ranOut";
+        }
+      } else if (this.onTab == "shopping") {
+        return "shopping";
+      }
+      //comment
+      else {
+        return "ranOut";
+      }
     },
   },
 };
@@ -489,18 +544,6 @@ aside p {
   font-size: 1.2rem;
 }
 
-.catalog .active {
-  background-color: #000;
-  color: var(--white);
-}
-.catalog .active:hover {
-  background-color: #000000d7;
-}
-
-.catalog .inactive:hover {
-  background-color: #0000002c;
-}
-
 .catalog .body {
   display: flex;
   flex-direction: column;
@@ -510,7 +553,6 @@ aside p {
 article {
   border-radius: 0.5rem;
   padding: 1rem;
-  background-color: var(--white);
 
   display: flex;
 }
@@ -521,6 +563,15 @@ article p {
 
 article .ingredientInfo {
   width: 100%;
+}
+
+.shopping,
+.pantry {
+  background-color: var(--white);
+}
+
+.ranOut {
+  border: solid 0.1rem #000;
 }
 
 .pantryIngredientQuantity {
@@ -566,9 +617,48 @@ article .ingredientQuantity p {
 
 input[type="checkbox"] {
   width: 1rem;
+  margin-right: 1rem;
 }
 
 .ingredientTitle {
   font-size: 1.5rem;
+}
+
+.btnRemove {
+  cursor: pointer;
+  margin-left: 1rem;
+
+  display: flex;
+}
+
+.btnRemove img {
+  width: 100%;
+  max-width: 1rem;
+
+  align-self: center;
+}
+
+.btnComplete {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+
+  background-color: var(--even-darker-green);
+}
+
+.btnComplete:hover {
+  background-color: var(--dark-green);
+}
+
+.ranOutIngredientQuantity .active {
+  background-color: var(--even-darker-green);
+  color: var(--white);
+}
+
+.ranOutIngredientQuantity .active:hover {
+  background-color: var(--dark-green);
+}
+
+.inactive:hover {
+  background-color: #0000002c;
 }
 </style>
