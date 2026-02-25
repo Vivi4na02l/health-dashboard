@@ -106,8 +106,8 @@
           <input
             v-show="arrangeStructure(ingredient) == 'shopping' ? true : false"
             type="checkbox"
-            name=""
-            id=""
+            :checked="ingredient.checked"
+            @change="toggleChecked(ingredient.ingredient, $event.target.checked)"
           />
 
           <!-- ingredient name and its info -->
@@ -131,7 +131,15 @@
             >
               -
             </div>
-            <p>{{ ingredient.quantity }}</p>
+            <p v-if="onTab == 'pantry'">{{ ingredient.quantity }}</p>
+            <p v-else>
+              {{
+                ingredientChecks[ingredient.ingredient + "Quantity"]
+                  ? ingredientChecks[ingredient.ingredient + "Quantity"]
+                  : 0
+              }}
+              <!-- ingredientChecks[ingredient.ingredient + "Quantity"] || 0 -->
+            </p>
             <div class="btnQuantity" @click="changeIngredientQuantity(ingredient.ingredient, true)">
               +
             </div>
@@ -141,12 +149,16 @@
             class="ranOutIngredientQuantity"
             v-if="onTab == 'pantry' && ingredient.quantity == 0"
           >
-            <div
-              :class="ingredient.onShoppingList ? 'btnQuantity active' : 'btnQuantity inactive'"
-              @click="changeIngredientList(ingredient.ingredient, null)"
-            >
-              <p v-if="!ingredient.onShoppingList">Shopping list</p>
-              <p v-else>On shopping list</p>
+            <div :class="ingredient.onShoppingList ? 'btnQuantity active' : 'btnQuantity inactive'">
+              <div
+                @click="changeIngredientList(ingredient.ingredient, true)"
+                v-if="!ingredient.onShoppingList"
+              >
+                Shopping list
+              </div>
+              <div @click="changeIngredientList(ingredient.ingredient, false)" v-else>
+                On shopping list
+              </div>
             </div>
             <div
               class="btnQuantity"
@@ -168,7 +180,9 @@
           </div>
         </article>
 
-        <button class="btnComplete">Complete grocery shopping</button>
+        <button class="btnComplete" v-show="onTab == 'shopping'" @click="completeShopping()">
+          Complete grocery shopping
+        </button>
       </div>
     </div>
   </section>
@@ -181,16 +195,11 @@ import { usersStore } from "@/store/users";
 export default {
   data() {
     return {
-      // user: { ingredients: [] },
-      // userCopy: [],
-
-      // listArray: [],
-
       searchForm: "searching",
 
       onTab: "pantry",
 
-      isEditing: false,
+      ingredientChecks: {},
 
       form: {
         txtIngredient: "",
@@ -212,9 +221,9 @@ export default {
     };
   },
 
-  // created() {
-  //   this.getIngredients();
-  // },
+  created() {
+    this.quantityOnShoppingList();
+  },
 
   computed: {
     user() {
@@ -227,45 +236,40 @@ export default {
         return [];
       }
 
-      return [...this.user.ingredients].sort((a, b) => {
-        if (a.quantity == 0 && b.quantity != 0) {
-          return 1;
-        }
+      return (
+        [...this.user.ingredients]
+          .sort((a, b) => {
+            if (a.quantity == 0 && b.quantity != 0) {
+              return 1;
+            }
 
-        if (a.quantity != 0 && b.quantity == 0) {
-          return -1;
-        }
+            if (a.quantity != 0 && b.quantity == 0) {
+              return -1;
+            }
 
-        return 0;
-      });
+            return 0;
+          })
+          /**
+           * adds to each position(ingredient) two parameters
+           * shoppingQuantity -> stores the value on the shopping list (different then quantity of array in the store users.js that is the pantry quantity)
+           * checked -> used on the shopping list that, if checked, will allow addition of "shoppingQuantity" integer to pantry quantity
+           */
+          .map((ingredient) => ({
+            ...ingredient,
+            // shoppingQuantity: 0,
+            checked: this.ingredientChecks[ingredient.ingredient] || false,
+          }))
+      );
     },
   },
 
   methods: {
-    // getIngredients() {
-    //   console.log("olá :)");
-
-    //   const auth = authStore();
-    //   const user = usersStore().getUser(auth.currentUsername);
-
-    //   this.user = user;
-    //   this.userCopy = [...user.ingredients];
-    // },
-
     listChange(ingredient) {
       if (this.onTab == "pantry") {
-        // if (ingredient.quantity) {
         return true;
-        // }
       } else if (this.onTab == "shopping" && ingredient.onShoppingList) {
         return true;
-      }
-      //comment
-      else if (this.onTab == "ranOut" && ingredient.quantity == 0) {
-        return true;
-      }
-      //comment
-      else {
+      } else {
         return false;
       }
     },
@@ -309,14 +313,59 @@ export default {
       this.modalForm.msg.txt = "";
     },
 
-    changeIngredientQuantity(ingredient, isPlus) {
-      const auth = authStore();
-      usersStore().changeIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+    quantityOnShoppingList() {
+      for (const ingredient of this.getIngredients) {
+        if (ingredient.onShoppingList) {
+          this.ingredientChecks[ingredient.ingredient] = false;
+          this.ingredientChecks[ingredient.ingredient + "Quantity"] = 0;
+        }
+      }
     },
 
-    changeIngredientList(ingredient, toShoppingList) {
+    changeIngredientQuantity(ingredientName, isPlus) {
+      if (this.onTab == "pantry") {
+        const auth = authStore();
+        usersStore().changeIngredientQuantity(auth.currentUsername, ingredientName, isPlus);
+      }
+      // if on shopping list
+      else {
+        console.log(this.ingredientChecks);
+
+        const key = ingredientName + "Quantity";
+
+        if (key in this.ingredientChecks && isPlus) {
+          this.ingredientChecks[ingredientName + "Quantity"]++;
+        }
+      }
+    },
+
+    changeIngredientList(ingredientName, toShoppingList) {
       const auth = authStore();
-      usersStore().changeIngredientList(auth.currentUsername, ingredient, toShoppingList);
+      usersStore().changeIngredientList(auth.currentUsername, ingredientName, toShoppingList);
+
+      if (toShoppingList) {
+        this.ingredientChecks[ingredientName + "Quantity"] = 0;
+      }
+    },
+
+    /**
+     * adds to the object ingredientChecks, "ingredientName: ingredientIsChecked"
+     * @param ingredientName
+     * @param ingredientIsChecked true/false
+     */
+    toggleChecked(ingredientName, ingredientIsChecked) {
+      this.ingredientChecks[ingredientName] = ingredientIsChecked;
+      // this.ingredientChecks[ingredientName+"Quantity"] = 0;
+    },
+
+    completeShopping() {
+      for (const ingredient of this.user.ingredients) {
+        const key = ingredient.ingredient + "Quantity";
+
+        if (key in this.ingredientChecks) {
+          ingredient.quantity += this.ingredientChecks[ingredient.ingredient + "Quantity"];
+        }
+      }
     },
 
     arrangeStructure(ingredient) {
@@ -595,6 +644,7 @@ article .ingredientInfo {
 }
 
 .ranOut {
+  align-items: center;
   border: solid 0.1rem #000;
 }
 
