@@ -322,10 +322,15 @@ export default {
       }
     },
 
-    changeIngredientQuantity(ingredientName, isPlus) {
-      if (this.onTab == "pantry") {
+    changeIngredientQuantity(ingredientName, isPlus, customAddition = 0) {
+      if (this.onTab == "pantry" || customAddition != 0) {
         const auth = authStore();
-        usersStore().changeIngredientQuantity(auth.currentUsername, ingredientName, isPlus);
+        usersStore().changeIngredientQuantity(
+          auth.currentUsername,
+          ingredientName,
+          isPlus,
+          customAddition,
+        );
       }
       // if on shopping list
       else {
@@ -368,7 +373,14 @@ export default {
 
         if (key in this.ingredientChecks && keyQuantity in this.ingredientChecks) {
           if (this.ingredientChecks[key]) {
-            ingredient.quantity += this.ingredientChecks[ingredient.ingredient + "Quantity"];
+            console.log(this.ingredientChecks[ingredient.ingredient + "Quantity"]);
+
+            // ingredient.quantity += this.ingredientChecks[ingredient.ingredient + "Quantity"];
+            this.changeIngredientQuantity(
+              ingredient.ingredient,
+              true,
+              this.ingredientChecks[ingredient.ingredient + "Quantity"],
+            );
           }
         }
       }

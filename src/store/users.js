@@ -100,13 +100,19 @@ export const usersStore = defineStore("users", {
      * @param {*} ingredient ingredient of which the button as been clicked
      * @param {*} isPlus is true if the button clicked was "plus", false if it was the button "minus"
      */
-    changeIngredientQuantity(username, ingredient, isPlus) {
+    changeIngredientQuantity(username, ingredient, isPlus, customAddition) {
       const user = this.getUser(username);
       const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
 
       // increases the quantity
       if (isPlus) {
-        user.ingredients[ingredientIndex].quantity++;
+        if (customAddition != 0) {
+          user.ingredients[ingredientIndex].quantity += customAddition;
+
+          user.ingredients[ingredientIndex].onShoppingList = false;
+        } else {
+          user.ingredients[ingredientIndex].quantity++;
+        }
 
         this.updateArray();
       }
