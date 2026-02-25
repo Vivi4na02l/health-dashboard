@@ -7,10 +7,7 @@
 
     <!-- components in line 2: -->
     <PantryList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></PantryList>
-    <ShoppingList
-      class="animHigher"
-      @click="this.$router.push({ name: 'Shopping' })"
-    ></ShoppingList>
+    <ShoppingList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></ShoppingList>
     <RecipesList
       class="span2 animHigher"
       @click="this.$router.push({ name: 'Recipes' })"

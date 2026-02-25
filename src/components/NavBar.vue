@@ -30,8 +30,7 @@ export default {
       items: [
         { key: "Home", label: "Dashboard" },
         { key: "Week", label: "Week day" },
-        { key: "Pantry", label: "Pantry" },
-        { key: "Shopping", label: "Shopping list" },
+        { key: "Pantry", label: "Groceries" },
         { key: "Recipes", label: "Recipes" },
       ],
 
@@ -50,7 +49,12 @@ export default {
 
   watch: {
     $route() {
-      this.moveSlider(event.currentTarget);
+      this.$nextTick(() => {
+        const activeElement = this.$el.querySelector(".active");
+        if (activeElement) {
+          this.moveSlider(activeElement);
+        }
+      });
     },
   },
 
