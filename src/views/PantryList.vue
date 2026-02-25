@@ -358,12 +358,18 @@ export default {
       // this.ingredientChecks[ingredientName+"Quantity"] = 0;
     },
 
+    /**
+     * If the ingredient's checkbox is checked, adds the ingredient shopping's quantity to the pantry quantity of that same ingredient
+     */
     completeShopping() {
       for (const ingredient of this.user.ingredients) {
-        const key = ingredient.ingredient + "Quantity";
+        const key = ingredient.ingredient;
+        const keyQuantity = ingredient.ingredient + "Quantity";
 
-        if (key in this.ingredientChecks) {
-          ingredient.quantity += this.ingredientChecks[ingredient.ingredient + "Quantity"];
+        if (key in this.ingredientChecks && keyQuantity in this.ingredientChecks) {
+          if (this.ingredientChecks[key]) {
+            ingredient.quantity += this.ingredientChecks[ingredient.ingredient + "Quantity"];
+          }
         }
       }
     },
