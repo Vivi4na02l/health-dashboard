@@ -47,10 +47,14 @@ div {
 
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 1rem;
 
   padding: 1rem;
+}
+
+div > * {
+  overflow: hidden;
 }
 
 .span2 {

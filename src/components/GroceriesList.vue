@@ -7,7 +7,7 @@
       <button>Add to {{ componentList.toLowerCase() }} list</button>
     </div>
 
-    <div v-else>
+    <div class="miniCatalog" v-else>
       <article
         v-show="ingredientsList(ingredient)"
         v-for="ingredient of getIngredients"
@@ -17,6 +17,7 @@
 
         <p>{{ ingredient.protein }}g of protein in {{ ingredient.weight }}g</p>
       </article>
+      <p v-show="isListLong">Click to see more</p>
     </div>
   </section>
 </template>
@@ -40,7 +41,34 @@ const getIngredients = computed(() => {
     return [];
   }
 
-  return [...user.value.ingredients];
+  return user.value.ingredients
+    .filter((ingredient) => {
+      if (ingredient.onShoppingList && props.componentList === "shopping") {
+        return true;
+      }
+
+      if (!ingredient.onShoppingList && props.componentList === "pantry") {
+        return true;
+      }
+
+      return false;
+    })
+    .slice(0, 3);
+  // return [...user.value.ingredients];
+});
+
+const isListLong = computed(() => {
+  return filteredIngredients.value.length > 3;
+});
+
+const filteredIngredients = computed(() => {
+  if (!user.value) return [];
+
+  return user.value.ingredients.filter((ingredient) => {
+    return ingredient.onShoppingList
+      ? props.componentList === "shopping"
+      : props.componentList === "pantry";
+  });
 });
 
 function areIngredientsInList() {
@@ -115,5 +143,14 @@ article {
   justify-content: space-between;
 
   background-color: var(--white);
+}
+
+.miniCatalog p {
+  text-align: center;
+}
+
+.miniCatalog p:hover {
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>
