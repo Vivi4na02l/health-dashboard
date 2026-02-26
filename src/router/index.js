@@ -4,7 +4,6 @@ import MainPage from "@/views/MainPage.vue";
 import AuthenticationForm from "@/views/AuthenticationForm.vue";
 import WeekDay from "@/views/WeekDay.vue";
 import PantryList from "@/views/PantryList.vue";
-import ShoppingList from "@/views/ShoppingList.vue";
 import RecipesList from "@/views/RecipesList.vue";
 
 const routes = [
@@ -24,12 +23,6 @@ const routes = [
     path: "/pantry",
     name: "Pantry",
     component: PantryList,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/shopping-list",
-    name: "Shopping",
-    component: ShoppingList,
     meta: { requiresAuth: true },
   },
   {

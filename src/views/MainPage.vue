@@ -6,8 +6,16 @@
     <ProteinIntake></ProteinIntake>
 
     <!-- components in line 2: -->
-    <PantryList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></PantryList>
-    <ShoppingList class="animHigher" @click="this.$router.push({ name: 'Pantry' })"></ShoppingList>
+    <GroceriesList
+      :componentList="'pantry'"
+      class="animHigher"
+      @click="this.$router.push({ name: 'Pantry' })"
+    ></GroceriesList>
+    <GroceriesList
+      :componentList="'shopping'"
+      class="animHigher"
+      @click="this.$router.push({ name: 'Pantry' })"
+    ></GroceriesList>
     <RecipesList
       class="span2 animHigher"
       @click="this.$router.push({ name: 'Recipes' })"
@@ -19,15 +27,13 @@
 import WeekDay from "@/components/WeekDay.vue";
 import WaterIntake from "@/components/WaterIntake.vue";
 import ProteinIntake from "@/components/ProteinIntake.vue";
-import PantryList from "@/components/PantryList.vue";
-import ShoppingList from "@/components/ShoppingList.vue";
+import GroceriesList from "@/components/GroceriesList.vue";
 import RecipesList from "@/components/RecipesList.vue";
 
 export default {
   components: {
     WeekDay,
-    PantryList,
-    ShoppingList,
+    GroceriesList,
     WaterIntake,
     ProteinIntake,
     RecipesList,
