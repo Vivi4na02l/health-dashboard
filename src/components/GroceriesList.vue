@@ -2,8 +2,8 @@
   <section class="component">
     <h2>{{ componentList.toUpperCase() }}</h2>
 
-    <div v-if="getIngredients.length == 0">
-      <p>You haven't added ingredients to your pantry yet...</p>
+    <div v-if="areIngredientsInList()">
+      <p>You haven't added ingredients to your {{ componentList.toLowerCase() }} list yet...</p>
       <button>Add to pantry</button>
     </div>
 
@@ -42,6 +42,22 @@ const getIngredients = computed(() => {
 
   return [...user.value.ingredients];
 });
+
+function areIngredientsInList() {
+  if (
+    props.componentList == "shopping" &&
+    getIngredients.value.find((ingredient) => ingredient.onShoppingList == true)
+  ) {
+    return false;
+  } else if (
+    props.componentList == "pantry" &&
+    getIngredients.value.find((ingredient) => ingredient.onShoppingList == false)
+  ) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
 function ingredientsList(ingredient) {
   if (ingredient.onShoppingList == true && props.componentList == "shopping") {
