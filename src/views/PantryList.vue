@@ -94,7 +94,7 @@
         <button type="submit" @click="modal = true">Add to list</button>
       </header>
 
-      <div class="body">
+      <div v-if="areIngredientsInList()" class="body">
         <!-- v-if="onTab == 'pantry'" -->
         <article
           v-for="ingredient of getIngredients"
@@ -183,6 +183,12 @@
         <button class="btnComplete" v-show="onTab == 'shopping'" @click="completeShopping()">
           Complete grocery shopping
         </button>
+      </div>
+
+      <!-- if ingredients list empty -->
+      <div v-else class="empty">
+        <img src="../assets/images/icon-empty-box.png" alt="empty box with fly" />
+        <p>There is no ingredients in this list.</p>
       </div>
     </div>
   </section>
@@ -311,6 +317,22 @@ export default {
       this.modal = false;
       this.modalForm.submit = false;
       this.modalForm.msg.txt = "";
+    },
+
+    areIngredientsInList() {
+      if (
+        this.onTab == "shopping" &&
+        this.getIngredients.find((ingredient) => ingredient.onShoppingList == true)
+      ) {
+        return true;
+      } else if (
+        this.onTab == "pantry" &&
+        this.getIngredients.find((ingredient) => ingredient.onShoppingList == false)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
 
     quantityOnShoppingList() {
@@ -752,5 +774,21 @@ input[type="checkbox"] {
 
 .inactive:hover {
   background-color: #0000002c;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.empty img {
+  width: 100%;
+  max-width: 20rem;
+}
+
+.empty p {
+  text-align: center;
 }
 </style>

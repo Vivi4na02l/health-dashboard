@@ -4,7 +4,7 @@
 
     <div v-if="areIngredientsInList()">
       <p>You haven't added ingredients to your {{ componentList.toLowerCase() }} list yet...</p>
-      <button>Add to pantry</button>
+      <button>Add to {{ componentList.toLowerCase() }} list</button>
     </div>
 
     <div v-else>
@@ -86,6 +86,19 @@ section div {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+button {
+  border-radius: 1rem;
+  border: solid 0.1rem #cbcbcb;
+  padding: 1rem;
+
+  background-color: var(--white);
+}
+button:hover {
+  cursor: pointer;
+
+  background-color: #eeeeee;
 }
 
 article {
