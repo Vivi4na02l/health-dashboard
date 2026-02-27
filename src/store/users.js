@@ -28,6 +28,16 @@ export const usersStore = defineStore("users", {
                 //   instructions: [],
                 // }
               ],
+              week: {
+                // activities: [],
+                // monday: [],
+                // tuesday: [],
+                // wednesday: [],
+                // thrusday: [],
+                // friday: [],
+                // saturday: [],
+                // sunday: [],
+              },
             },
           ],
     };
@@ -50,6 +60,16 @@ export const usersStore = defineStore("users", {
         password: password,
         ingredients: [],
         recipes: [],
+        week: {
+          activities: ["stretching", "climbing", "running", "strength training"],
+          monday: [],
+          tuesday: [],
+          wednesday: [],
+          thursday: [],
+          friday: [],
+          saturday: [],
+          sunday: [],
+        },
       });
 
       this.updateArray();
@@ -62,6 +82,25 @@ export const usersStore = defineStore("users", {
      */
     getUser(username) {
       return this.users.find((user) => user.username == username);
+    },
+
+    /**
+     * adds activity choosen to the parameter of the object corresponding to the week selected
+     * @param {*} day
+     * @param {*} activity
+     */
+    addActivity(username, day, activity) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      user.week[day].push(activity);
+
+      this.updateArray();
+
+      return { txt: `Activity added to ${day}!`, success: true };
     },
 
     /**
