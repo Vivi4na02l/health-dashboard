@@ -12,17 +12,17 @@
           <select name="activities" v-model="form.activities">
             <option value="">select an activity</option>
             <option
-              :value="activity"
+              :value="activity.activity"
               v-for="activity of getActivities"
               :key="activity.key"
               selected
             >
-              {{ activity }}
+              {{ activity.activity }}
             </option>
           </select>
         </span>
 
-        <p v-show="modal.success" :class="modal.success ? 'success' : 'error'">{{ modal.txt }}</p>
+        <p v-show="modal.txt != ''" :class="modal.success ? 'success' : 'error'">{{ modal.txt }}</p>
 
         <footer>
           <button class="btnConfirm" @click="addActivity()">Confirm</button>
@@ -53,8 +53,20 @@
       <h2>{{ today.dayWeek }}</h2>
       <h3>{{ today.day }} of {{ today.month }}</h3>
 
-      <img src="../assets/images/icon-lazy.png" alt="lazy animal" />
-      <p>You have no activities assign for {{ today.dayWeek }}s.</p>
+      <span v-if="!getWeek[today.dayWeek.toLocaleLowerCase()].length">
+        <img src="../assets/images/icon-lazy.png" alt="lazy animal" />
+        <p>You have no activities assign for {{ today.dayWeek }}s.</p>
+      </span>
+
+      <span v-else>
+        <Transition name="fade" mode="out-in">
+          <div :key="currentActivity?.activity">
+            <img :src="currentActivity?.img" :alt="'person ' + currentActivity?.activity" />
+            <p>Today is day of {{ currentActivity?.activity }}!</p>
+          </div>
+        </Transition>
+      </span>
+
       <button class="btnOpenModal" @click="openModal = true">Add activity</button>
     </div>
 
@@ -76,12 +88,27 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted, onUnmounted } from "vue";
 import { authStore } from "@/store/auth";
 import { usersStore } from "@/store/users";
 
+import stretchingImg from "@/assets/images/icon-stretching.png";
+import climbingImg from "@/assets/images/icon-climbing.png";
+import runningImg from "@/assets/images/icon-running.png";
+import gymImg from "@/assets/images/icon-gym.png";
+
+const activityImages = {
+  stretching: stretchingImg,
+  climbing: climbingImg,
+  running: runningImg,
+  gym: gymImg,
+};
+
 const onTab = ref("today");
 const openModal = ref(false);
+
+const currentIndex = ref(0);
+let interval = null;
 
 const form = ref({
   activities: "",
@@ -111,6 +138,46 @@ const getActivities = computed(() => {
   }
 
   return [...user.value.week.activities];
+});
+
+const getWeek = computed(() => {
+  if (!user.value) {
+    return null;
+  }
+
+  return user.value.week;
+});
+
+const currentActivity = computed(() => {
+  const day = getWeek.value[today.value.dayWeek.toLocaleLowerCase()];
+
+  console.log(day);
+
+  if (!day.length) {
+    return null;
+  }
+
+  const activityName = day[currentIndex.value];
+
+  return { activity: activityName, img: activityImages[activityName] };
+});
+
+onMounted(() => {
+  const day = getWeek.value[today.value.dayWeek.toLocaleLowerCase()];
+
+  interval = setInterval(() => {
+    if (day.length > 1) {
+      if (currentIndex.value != day.length - 1) {
+        currentIndex.value++;
+      } else {
+        currentIndex.value = 0;
+      }
+    }
+  }, 5000);
+});
+
+onUnmounted(() => {
+  clearInterval(interval);
 });
 
 function notToday(isTomorrow) {

@@ -61,7 +61,20 @@ export const usersStore = defineStore("users", {
         ingredients: [],
         recipes: [],
         week: {
-          activities: ["stretching", "climbing", "running", "strength training"],
+          activities: [
+            {
+              activity: "stretching",
+            },
+            {
+              activity: "climbing",
+            },
+            {
+              activity: "running",
+            },
+            {
+              activity: "gym",
+            },
+          ],
           monday: [],
           tuesday: [],
           wednesday: [],
@@ -96,11 +109,14 @@ export const usersStore = defineStore("users", {
         return { txt: "User not found!", success: false };
       }
 
-      user.week[day].push(activity);
+      if (!user.week[day].find((act) => act == activity)) {
+        user.week[day].push(activity);
 
-      this.updateArray();
-
-      return { txt: `Activity added to ${day}!`, success: true };
+        this.updateArray();
+        return { txt: `Activity added to ${day}!`, success: true };
+      } else {
+        return { txt: `Activity is already added to ${day}!`, success: false };
+      }
     },
 
     /**
