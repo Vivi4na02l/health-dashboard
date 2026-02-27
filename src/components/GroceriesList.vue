@@ -54,7 +54,6 @@ const getIngredients = computed(() => {
       return false;
     })
     .slice(0, 3);
-  // return [...user.value.ingredients];
 });
 
 const isListLong = computed(() => {
