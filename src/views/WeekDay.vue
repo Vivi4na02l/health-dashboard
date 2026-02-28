@@ -32,7 +32,7 @@
     </div>
 
     <!-- arrow left -->
-    <span
+    <!-- <span
       @click="onTab = 'yesterday'"
       :class="onTab != 'yesterday' ? 'yesterday' : 'yesterday hidden'"
     >
@@ -47,7 +47,7 @@
         <p>Yesterday</p>
         <p>{{ notToday(false) }}</p>
       </span>
-    </span>
+    </span> -->
 
     <div class="activity">
       <h2>{{ today.dayWeek }}</h2>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- arrow right -->
-    <span @click="onTab = 'tomorrow'" :class="onTab != 'tomorrow' ? 'tomorrow' : 'tomorrow hidden'">
+    <!-- <span @click="onTab = 'tomorrow'" :class="onTab != 'tomorrow' ? 'tomorrow' : 'tomorrow hidden'">
       <span v-if="onTab == 'yesterday'">
         <p>Today</p>
         <p>{{ today.dayWeek }}</p>
@@ -83,7 +83,7 @@
       </span>
 
       <img src="../assets/images/icon-arrow.png" alt="arrow to the right" />
-    </span>
+    </span> -->
   </section>
 </template>
 

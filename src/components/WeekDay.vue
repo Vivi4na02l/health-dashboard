@@ -5,14 +5,40 @@
       <h2>{{ today.dayWeek }}</h2>
     </div>
 
-    <div>
-      <p>Stretching</p>
-      <img src="../assets/images/icon-stretch.png" alt="woman doing stretching pose" />
+    <div v-if="!getWeek[today.dayWeek.toLocaleLowerCase()].length">
+      <img src="../assets/images/icon-lazy.png" alt="lazy animal" />
+      <p>You have no activities assign for {{ today.dayWeek }}s.</p>
+    </div>
+
+    <div v-else>
+      <Transition name="fade" mode="out-in">
+        <div :key="currentActivity?.activity">
+          <img :src="currentActivity?.img" :alt="'person ' + currentActivity?.activity" />
+          <p>Today is day of {{ currentActivity?.activity }}!</p>
+        </div>
+      </Transition>
     </div>
   </section>
 </template>
 
 <script>
+import { authStore } from "@/store/auth";
+import { usersStore } from "@/store/users";
+
+import stretchingImg from "@/assets/images/icon-stretching.png";
+import climbingImg from "@/assets/images/icon-climbing.png";
+import runningImg from "@/assets/images/icon-running.png";
+import gymImg from "@/assets/images/icon-gym.png";
+
+const activityImages = {
+  stretching: stretchingImg,
+  climbing: climbingImg,
+  running: runningImg,
+  gym: gymImg,
+};
+
+let interval = null;
+
 export default {
   data() {
     return {
@@ -21,11 +47,56 @@ export default {
         month: new Date().toLocaleString("en-UK", { month: "long" }),
         dayWeek: new Intl.DateTimeFormat("en-UK", { weekday: "long" }).format(new Date()),
       },
+
+      currentIndex: 0,
     };
   },
 
-  created() {
-    // this.getTodaysDate();
+  mounted() {
+    const day = this.getWeek[this.today.dayWeek.toLocaleLowerCase()];
+
+    interval = setInterval(() => {
+      if (day.length > 1) {
+        if (this.currentIndex != day.length - 1) {
+          this.currentIndex++;
+        } else {
+          this.currentIndex = 0;
+        }
+      }
+    }, 5000);
+  },
+
+  unmounted() {
+    this.currentIndex = 0;
+  },
+
+  computed: {
+    user() {
+      const auth = authStore();
+      return usersStore().getUser(auth.currentUsername);
+    },
+
+    getWeek() {
+      if (!this.user) {
+        return null;
+      }
+
+      return this.user.week;
+    },
+
+    currentActivity() {
+      const day = this.getWeek[this.today.dayWeek.toLocaleLowerCase()];
+
+      console.log(day);
+
+      if (!day.length) {
+        return null;
+      }
+
+      const activityName = day[this.currentIndex];
+
+      return { activity: activityName, img: activityImages[activityName] };
+    },
   },
 
   methods: {
