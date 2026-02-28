@@ -1,16 +1,19 @@
 <template>
   <section class="component">
-    <div id="imgRecipe">
+    <aside id="imgRecipe">
       <!-- image of recipe dish -->
-    </div>
+    </aside>
+
     <div>
-      <h2>Francesinha</h2>
+      <header>
+        <h2>Francesinha</h2>
+      </header>
       <p>1h</p>
     </div>
   </section>
 </template>
 
-<script lang="ts" setup></script>
+<script></script>
 
 <style scoped>
 section {
@@ -20,6 +23,28 @@ section {
   background-color: var(--light-green);
 
   overflow: hidden;
+}
+
+section > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  padding: 1rem;
+}
+
+header {
+  width: 100%;
+
+  border-bottom: solid 0.1rem #000;
+  padding-bottom: 1rem;
+
+  text-align: center;
+}
+
+h2 {
+  padding: 0;
+  margin: 0;
 }
 
 #imgRecipe {

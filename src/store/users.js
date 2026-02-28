@@ -58,8 +58,81 @@ export const usersStore = defineStore("users", {
       this.users.push({
         username: username,
         password: password,
-        ingredients: [],
-        recipes: [],
+        ingredients: [
+          {
+            ingredient: "Straw potato",
+            weight: 100,
+            protein: 6.9,
+            quantity: 0,
+            onShoppingList: false,
+          },
+          {
+            ingredient: "Canned tuna",
+            weight: 100,
+            protein: 25,
+            quantity: 0,
+            onShoppingList: false,
+          },
+          {
+            ingredient: "Onion",
+            weight: 100,
+            protein: 1,
+            quantity: 0,
+            onShoppingList: false,
+          },
+          {
+            ingredient: "Garlic",
+            weight: 5,
+            protein: 0.2,
+            quantity: 0,
+            onShoppingList: false,
+          },
+          {
+            ingredient: "Egg",
+            weight: 63,
+            protein: 6,
+            quantity: 0,
+            onShoppingList: false,
+          },
+        ],
+        recipes: [
+          {
+            recipe: "Atum à Brás",
+            description:
+              '"Atum à Brás" is a practical and tasty variation to the classic portuguese dish "Bacalhau à Brás", maintaining the traditional base of scrambled eggs, straw potatoes and onions wrapped in a creamy and comforting preparation.',
+            ingredients: [
+              {
+                ingredient: "Onion",
+                weight: 100,
+              },
+              {
+                ingredient: "Garlic",
+                weight: 5,
+              },
+              {
+                ingredient: "Canned tuna",
+                weight: 200,
+              },
+              {
+                ingredient: "Straw potato",
+                weight: 250,
+              },
+              {
+                ingredient: "Egg",
+                weight: 63,
+              },
+            ],
+            img: "https://imgs.search.brave.com/FA5TlTZBZ3Fr-XVLZg3xXphq8U5-pDXgwCWfp-JL278/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9ydXJh/bGVhLmNvbS93cC1j/b250ZW50L3VwbG9h/ZHMvMjAyMC8wOC9J/TUdfNzA1Ni1lMTU5/MzI3Mzk3MjYwMi0y/LTUwMHg1MDAuanBn",
+            steps: [
+              "Cut 1 full onion in slices and 1 garlic clove",
+              "Add the onion and garlic to a hot pan with olive oil and let it stir for 1 minute",
+              "Add 2/3 of the straw potato",
+              "In a ball, add the egg and mix with salt and black pepper",
+              "In low heat, add the egg to the pan and mix very well",
+              "Turn off the stove and add the rest of the potato fries",
+            ],
+          },
+        ],
         week: {
           activities: [
             {
