@@ -264,5 +264,72 @@ export const usersStore = defineStore("users", {
 
       this.updateArray();
     },
+
+    addRecipe(username, recipe) {
+      const user = this.getUser(username);
+
+      console.log(recipe);
+
+      if (
+        !recipe.recipe ||
+        !recipe.description ||
+        recipe.ingredients.length === 0 ||
+        recipe.steps.length === 0
+      ) {
+        return {
+          txt: "Recipe must have title, description, ingredients and steps!",
+          success: false,
+        };
+      }
+
+      if (
+        user.recipes.find(
+          (recipeOfArray) =>
+            recipeOfArray.recipe.trim().toLowerCase() === recipe.recipe.trim().toLowerCase(),
+        )
+      ) {
+        return { txt: "A recipe with this title already exists!", success: false };
+      }
+
+      user.recipes.push({
+        ...recipe,
+      });
+
+      this.updateArray();
+
+      return { txt: "Recipe added successfully!", success: true };
+    },
+
+    addRecipeIngredient(recipe, newIngredient) {
+      if (!newIngredient.ingredient || !newIngredient.weight) {
+        return { txt: "Fill all ingredient fields!", success: false };
+      }
+
+      const exists = recipe.ingredients.find(
+        (ing) =>
+          ing.ingredient.trim().toLowerCase() === newIngredient.ingredient.trim().toLowerCase(),
+      );
+
+      if (exists) {
+        return { txt: "Ingredient already added!", success: false };
+      }
+
+      recipe.ingredients.push({
+        ingredient: newIngredient.ingredient.trim(),
+        weight: +newIngredient.weight,
+      });
+
+      return { txt: "Ingredient added!", success: true };
+    },
+
+    addRecipeStep(recipe, step) {
+      if (!step || step.trim() === "") {
+        return { txt: "Instruction cannot be empty!", success: false };
+      }
+
+      recipe.steps.push(step.trim());
+
+      return { txt: "Instruction added!", success: true };
+    },
   },
 });

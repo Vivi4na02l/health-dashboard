@@ -1,5 +1,71 @@
 <template>
   <section>
+    <!-- modal -->
+    <div class="modal" v-show="openModal">
+      <div>
+        <header>
+          <h2>Create a new recipe</h2>
+        </header>
+
+        <div>
+          <span class="formSection">
+            <label for="txtTitle">Recipe's title:</label>
+            <input type="text" id="txtTitle" v-model="formNewRecipe.recipe" />
+          </span>
+
+          <span class="formSection">
+            <label for="txtImg">Image url:</label>
+            <input type="text" id="txtImg" v-model="formNewRecipe.img" />
+          </span>
+
+          <p>Recipe's description:</p>
+          <span class="formSection">
+            <textarea
+              name=""
+              id=""
+              placeholder='Ex.: "Recipe" is a recipe that focuses on...'
+              v-model="formNewRecipe.description"
+            ></textarea>
+          </span>
+
+          <p>Add one ingredient at a time!</p>
+          <span class="formIngredient">
+            <input
+              type="text"
+              id="txtIngredient"
+              v-model="newIngredient.ingredient"
+              placeholder="ingredient"
+            />
+            <input
+              type="number"
+              id="txtIngredient"
+              v-model="newIngredient.weight"
+              min="0"
+              placeholder="weight grams"
+            />
+            <button type="button" @click="addIngredient" class="btnPlus">+</button>
+          </span>
+        </div>
+
+        <p>Add one instruction at a time!</p>
+        <span class="formSection">
+          <label for="txtTitle">Instruction:</label>
+          <input type="text" id="txtTitle" v-model="newStep" />
+          <button type="button" @click="addStep" class="btnPlus">+</button>
+        </span>
+
+        <p v-show="modalMsg.txt != ''" :class="modalMsg.success ? 'success' : 'error'">
+          {{ modalMsg.txt }}
+        </p>
+
+        <footer>
+          <button class="btnConfirm" @click="addRecipe()">Confirm</button>
+          <button class="btnCancel" @click="openModal = false">Cancel</button>
+        </footer>
+      </div>
+    </div>
+
+    <!-- NORMAL CONTENT OUT OF MODAL -->
     <aside v-if="onCatalog">
       <input
         v-model="formSearch"
@@ -7,7 +73,7 @@
         id="txtSearchRecipe"
         placeholder="Search for a recipe"
       />
-      <button class="btnAddNew">Add new recipe</button>
+      <button class="btnAddNew" @click="openModal = true">Add new recipe</button>
     </aside>
 
     <div v-else>
@@ -75,9 +141,29 @@ import { usersStore } from "@/store/users";
 export default {
   data() {
     return {
-      formSearch: "",
+      formNewRecipe: {
+        recipe: "",
+        description: "",
+        ingredients: [],
+        img: "",
+        steps: [],
+      },
 
+      newIngredient: {
+        ingredient: "",
+        weight: "",
+      },
+
+      newStep: "",
+
+      modalMsg: {
+        txt: "",
+        success: false,
+      },
+
+      formSearch: "",
       onCatalog: true,
+      openModal: false,
       recipeName: "",
     };
   },
@@ -102,6 +188,58 @@ export default {
       }
 
       return this.user.recipes.find((recipe) => recipe.recipe == this.recipeName);
+    },
+  },
+
+  methods: {
+    addIngredient() {
+      const users = usersStore();
+
+      const result = users.addRecipeIngredient(this.formNewRecipe, this.newIngredient);
+
+      this.modalMsg.txt = result.txt;
+      this.modalMsg.success = result.success;
+
+      if (result.success) {
+        this.newIngredient.ingredient = "";
+        this.newIngredient.weight = "";
+      }
+    },
+
+    addStep() {
+      const users = usersStore();
+
+      const result = users.addRecipeStep(this.formNewRecipe, this.newStep);
+
+      this.modalMsg.txt = result.txt;
+      this.modalMsg.success = result.success;
+
+      if (result.success) {
+        this.newStep = "";
+      }
+    },
+
+    addRecipe() {
+      if (!this.formNewRecipe.recipe) return;
+
+      const auth = authStore();
+      const users = usersStore();
+
+      const result = users.addRecipe(auth.currentUsername, this.formNewRecipe);
+
+      this.modalMsg.txt = result.txt;
+      this.modalMsg.success = result.success;
+
+      if (result.success) {
+        this.formNewRecipe = {
+          title: "",
+          ingredients: [],
+          img: "",
+          steps: [],
+        };
+
+        this.openModal = false;
+      }
     },
   },
 };
@@ -273,5 +411,100 @@ li {
 li p {
   margin: 0;
   text-indent: 1rem;
+}
+
+/* MODAL */
+.modal {
+  width: 100%;
+  height: 100%;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  border-radius: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #00000044;
+}
+
+.modal > div {
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  background-color: var(--white);
+}
+
+header {
+  border-bottom: solid 0.1rem #000;
+}
+
+.modal .formSection {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.formIngredient {
+  display: grid;
+  grid-template-columns: 3fr 2fr 1fr;
+}
+
+.formSection .btnPlus {
+  align-self: stretch;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.btnPlus {
+  border-radius: 0.5rem;
+  border: none;
+
+  background-color: #000;
+  color: white;
+}
+
+.modal input,
+.modal textarea {
+  width: 100%;
+
+  border-radius: 0.5rem;
+  border: solid 0.1rem #cbcbcb;
+  padding: 0.5rem;
+
+  text-align: center;
+}
+
+.btnConfirm,
+.btnCancel {
+  border-radius: 0.5rem;
+  padding: 0.5rem 2rem 0.5rem 2rem;
+}
+
+.btnConfirm {
+  border: none;
+  background-color: #000;
+  color: #fff;
+}
+
+.btnCancel {
+  border: #000 solid 0.1rem;
+}
+.btnCancel:hover {
+  background-color: #0000001f;
+}
+
+footer {
+  border-top: solid 0.1rem #000;
+  padding-top: 1rem;
+
+  display: flex;
+  gap: 0.5rem;
 }
 </style>
