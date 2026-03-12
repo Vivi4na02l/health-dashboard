@@ -1,6 +1,6 @@
 <template>
   <nav>
-    <h1>Health</h1>
+    <h1>Health <span>(still in development)</span></h1>
 
     <div>
       <ul>
@@ -81,6 +81,11 @@ export default {
 </script>
 
 <style scoped>
+h1 span {
+  color: red;
+  font-size: 1.2rem;
+}
+
 nav {
   padding-left: 2rem;
   padding-right: 2rem;
