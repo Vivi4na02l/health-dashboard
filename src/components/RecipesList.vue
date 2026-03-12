@@ -1,19 +1,63 @@
 <template>
   <section class="component">
-    <aside id="imgRecipe">
+    <aside id="imgRecipe" :style="{ backgroundImage: `url(${getRecipes[0].img})` }">
       <!-- image of recipe dish -->
     </aside>
 
     <div>
+      <!-- <div :style="{ fontSize: data + 'px' }"></div> -->
       <header>
-        <h2>Francesinha</h2>
+        <h2>{{ getRecipes[0].recipe }}</h2>
       </header>
-      <p>1h</p>
+
+      <p>{{ getRecipes[0].description }}</p>
+
+      <div class="ingredients">
+        <h3>Ingredients</h3>
+
+        <ul>
+          <li v-for="ingredient of getRecipes[0].ingredients" :key="ingredient.key">
+            <p>{{ ingredient.ingredient }} ({{ ingredient.weight }}g)</p>
+          </li>
+        </ul>
+      </div>
     </div>
   </section>
 </template>
 
-<script></script>
+<script>
+import { authStore } from "@/store/auth";
+import { usersStore } from "@/store/users";
+
+export default {
+  data() {
+    return {};
+  },
+
+  computed: {
+    user() {
+      const auth = authStore();
+      return usersStore().getUser(auth.currentUsername);
+    },
+
+    getRecipes() {
+      if (!this.user) {
+        return [];
+      }
+
+      return [...this.user.recipes];
+    },
+
+    getRecipe() {
+      if (!this.user) {
+        return [];
+      }
+
+      return this.user.recipes.find((recipe) => recipe.recipe == this.recipeName);
+    },
+  },
+};
+</script>
 
 <style scoped>
 section {
@@ -48,7 +92,7 @@ h2 {
 }
 
 #imgRecipe {
-  background-image: url("https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ");
+  /* background-image: url("https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ"); */
   background-position: center;
   background-size: cover;
 }
