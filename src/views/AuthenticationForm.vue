@@ -23,7 +23,7 @@
           <p v-if="msg != ''" :class="isSuccess ? 'success' : 'error'">{{ msg }}</p>
 
           <button type="submit">Create account</button>
-          <p class="toggle" @click="toggleAuth()">Já tenho uma conta.</p>
+          <p class="toggle" @click="toggleAuth()">I already have an account.</p>
         </form>
       </div>
 
@@ -41,7 +41,7 @@
           <p v-if="msg != ''" :class="isSuccess ? 'success' : 'error'">{{ msg }}</p>
 
           <button type="submit">Log in</button>
-          <p class="toggle" @click="toggleAuth()">Ainda não tenho uma conta.</p>
+          <p class="toggle" @click="toggleAuth()">I don't have an account.</p>
         </form>
       </div>
     </transition>
@@ -117,75 +117,5 @@ export default {
 </script>
 
 <style scoped>
-/* FADE-IN AND OUT ANIMATION */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-
-section {
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-div {
-  width: 40%;
-  border-radius: 2rem;
-  padding: 5rem;
-
-  background-color: var(--white);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-}
-
-label {
-  margin-top: 1rem;
-}
-
-input {
-  border: solid 0.1rem #cbcbcb;
-  border-radius: 0.5rem;
-  padding: 1rem;
-}
-
-button {
-  cursor: pointer;
-
-  margin-top: 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 1rem;
-
-  background-color: var(--green);
-}
-button:hover {
-  background-color: #6de15b;
-}
-
-.toggle {
-  cursor: pointer;
-
-  text-align: center;
-  text-decoration: underline;
-}
-.toggle:hover {
-  color: var(--dark-green);
-}
+@import "@/assets/styles/Authentication.css";
 </style>

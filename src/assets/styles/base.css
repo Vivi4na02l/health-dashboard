@@ -75,3 +75,21 @@ body {
   transform: translateY(-10px);
   box-shadow: 0.625rem 1rem 0.3rem rgba(0, 0, 0, 0.111);
 }
+
+@media screen and (max-width: 400px) {
+  body {
+    font-size: 13px;
+  }
+}
+
+@media screen and (min-width: 401px) and (max-width: 767px) {
+  body {
+    font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  body {
+    font-size: 14px;
+  }
+}
