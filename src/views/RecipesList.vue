@@ -246,6 +246,30 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width: 400px) {
+  section > * {
+    width: 100%;
+  }
+}
+
+@media screen and (min-width: 401px) and (max-width: 767px) {
+  section > * {
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1022px) {
+  section > * {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  section > * {
+    width: 50%;
+  }
+}
+
 section {
   height: 100%;
 
@@ -253,10 +277,6 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-}
-
-section > * {
-  width: 50%;
 }
 
 aside {
