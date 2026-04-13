@@ -428,6 +428,99 @@ export default {
 </script>
 
 <style scoped>
+@media screen and (max-width: 400px) {
+  .catalog {
+    width: 100%;
+  }
+
+  .ranOut {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .ranOutIngredientQuantity {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .ranOutIngredientQuantity .btnQuantity {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pantryIngredientQuantity,
+  .btnRemove {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .pantryIngredientQuantity {
+    flex: 1;
+  }
+
+  .btnRemove {
+    margin-left: auto;
+  }
+
+  article {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (min-width: 401px) and (max-width: 767px) {
+  .catalog {
+    width: 80%;
+  }
+
+  .ranOut {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .ranOutIngredientQuantity {
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .ranOutIngredientQuantity .btnQuantity {
+    width: 100%;
+    text-align: center;
+  }
+
+  .pantryIngredientQuantity,
+  .btnRemove {
+    padding-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .pantryIngredientQuantity {
+    flex: 1;
+  }
+
+  .btnRemove {
+    margin-left: auto;
+  }
+
+  article {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1022px) {
+  .catalog {
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  .catalog {
+    width: 50%;
+  }
+}
+
 section {
   width: 100%;
   height: 100%;
@@ -627,8 +720,6 @@ aside p {
 }
 
 .catalog {
-  width: 40%;
-
   border-radius: 0.5rem;
   padding: 2rem;
 

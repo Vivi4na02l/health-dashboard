@@ -215,6 +215,51 @@ function addActivity() {
 </script>
 
 <style scoped>
+@media screen and (max-width: 400px) {
+  .activity {
+    width: 80%;
+    text-align: center;
+  }
+
+  .activity img {
+    width: 100%;
+    max-width: 15rem;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media screen and (min-width: 401px) and (max-width: 767px) {
+  .activity {
+    width: 60%;
+    text-align: center;
+  }
+
+  .activity img {
+    width: 100%;
+    max-width: 18rem;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .activity {
+    width: 40%;
+    text-align: center;
+  }
+
+  .activity img {
+    width: 100%;
+    max-width: 20rem;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
 .hidden {
   visibility: hidden;
 }
@@ -305,19 +350,6 @@ section > * {
   padding: 1rem;
 
   background-color: var(--light-green);
-}
-
-.activity {
-  width: 40%;
-  text-align: center;
-}
-
-.activity img {
-  width: 100%;
-  max-width: 20rem;
-
-  margin-top: 1rem;
-  margin-bottom: 1rem;
 }
 
 .btnOpenModal {
