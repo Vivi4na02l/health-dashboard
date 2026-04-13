@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- components in line 1: -->
-    <WeekDay class="span2 animHigher" @click="this.$router.push({ name: 'Week' })"></WeekDay>
+    <WeekDay
+      class="weekDayComponent animHigher"
+      @click="this.$router.push({ name: 'Week' })"
+    ></WeekDay>
     <WaterIntake></WaterIntake>
     <ProteinIntake></ProteinIntake>
 
@@ -17,7 +20,7 @@
       @click="this.$router.push({ name: 'Pantry' })"
     ></GroceriesList>
     <RecipesList
-      class="span2 animHigher"
+      class="recipeComponent animHigher"
       @click="this.$router.push({ name: 'Recipes' })"
     ></RecipesList>
   </div>
@@ -42,22 +45,75 @@ export default {
 </script>
 
 <style scoped>
-div {
-  height: 100%;
+@media screen and (max-width: 400px) {
+  div {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1rem;
 
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-template-rows: auto minmax(0, 1fr);
-  gap: 1rem;
-
-  padding: 1rem;
+    padding: 1rem;
+  }
 }
+
+@media screen and (min-width: 401px) and (max-width: 767px) {
+  div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1rem;
+
+    padding: 1rem;
+  }
+
+  .weekDayComponent,
+  .recipeComponent {
+    grid-column: span 2;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1022px) {
+  div {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1rem;
+
+    padding: 1rem;
+  }
+
+  .weekDayComponent {
+    grid-column: span 2;
+  }
+
+  .recipeComponent {
+    grid-column: span 3;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  div {
+    height: 100%;
+
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 1rem;
+
+    padding: 1rem;
+  }
+
+  .weekDayComponent,
+  .recipeComponent {
+    grid-column: span 2;
+  }
+}
+
+/* div {
+  height: 100%;
+} */
 
 div > * {
   overflow: hidden;
-}
-
-.span2 {
-  grid-column: span 2;
 }
 </style>

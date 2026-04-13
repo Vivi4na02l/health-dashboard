@@ -130,12 +130,28 @@ section div {
   align-items: center;
 }
 
-img {
-  min-width: 0;
-  width: 15rem;
-}
-
 #day {
   border-right: solid 0.1rem #000;
+}
+
+@media screen and (max-width: 399px) {
+  img {
+    min-width: 0;
+    width: 7rem;
+  }
+}
+
+@media screen and (min-width: 400px) and (max-width: 767px) {
+  img {
+    min-width: 0;
+    width: 10rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  img {
+    min-width: 0;
+    width: 15rem;
+  }
 }
 </style>
