@@ -1,119 +1,95 @@
 <template>
-  <div>
-    <!-- components in line 1: -->
-    <WeekDay
-      class="weekDayComponent animHigher"
-      @click="this.$router.push({ name: 'Week' })"
-    ></WeekDay>
-    <WaterIntake></WaterIntake>
-    <ProteinIntake></ProteinIntake>
+  <aside>
+    <header>
+      <h2>Welcome back, {{ user.username }}!</h2>
 
-    <!-- components in line 2: -->
-    <GroceriesList
-      :componentList="'pantry'"
-      class="animHigher"
-      @click="this.$router.push({ name: 'Pantry' })"
-    ></GroceriesList>
-    <GroceriesList
-      :componentList="'shopping'"
-      class="animHigher"
-      @click="this.$router.push({ name: 'Pantry' })"
-    ></GroceriesList>
-    <RecipesList
-      class="recipeComponent animHigher"
-      @click="this.$router.push({ name: 'Recipes' })"
-    ></RecipesList>
-  </div>
+      <span class="date">
+        <p>{{ today.dayWeek }}, {{ today.day }} of {{ today.month }}</p>
+      </span>
+    </header>
+
+    <div>
+      <!-- Nutrition -->
+      <h3>Nutrition</h3>
+      <article class="nutrition">
+        <NutritionIntake
+          class="component animHigher"
+          :componentList="{ name: 'Calories', unit: 'kcal' }"
+          @click="this.$router.push({ name: 'Water' })"
+        />
+        <NutritionIntake
+          class="component animHigher"
+          :componentList="{ name: 'Water', unit: 'L' }"
+          @click="this.$router.push({ name: 'Water' })"
+        />
+        <NutritionIntake
+          class="component animHigher"
+          :componentList="{ name: 'Protein', unit: 'g' }"
+          @click="this.$router.push({ name: 'Protein' })"
+        />
+      </article>
+
+      <!-- Inventory -->
+      <h3>Inventory</h3>
+      <article class="inventory">
+        <InventoryList
+          :ingredientType="'Ingredients'"
+          class="component animHigher"
+          @click="this.$router.push({ name: 'Pantry' })"
+        />
+        <InventoryList
+          :ingredientType="'IngredientsPantry'"
+          class="component animHigher"
+          @click="this.$router.push({ name: 'Pantry' })"
+        />
+        <InventoryList
+          :ingredientType="'IngredientsGroceries'"
+          class="component animHigher"
+          @click="this.$router.push({ name: 'Shopping' })"
+        />
+      </article>
+
+      <!-- Kitchen -->
+      <h3>Kitchen</h3>
+      <article class="kitchen">
+        <InventoryList
+          :ingredientType="'Recipes'"
+          class="component animHigher"
+          @click="this.$router.push({ name: 'Recipes' })"
+        />
+      </article>
+
+      <!-- Activity -->
+      <h3>Activity</h3>
+      <article class="activity">
+        <WeekDay class="component animHigher" @click="this.$router.push({ name: 'Week' })" />
+      </article>
+    </div>
+  </aside>
 </template>
 
-<script>
+<script setup>
 import WeekDay from "@/components/WeekDay.vue";
-import WaterIntake from "@/components/WaterIntake.vue";
-import ProteinIntake from "@/components/ProteinIntake.vue";
-import GroceriesList from "@/components/GroceriesList.vue";
-import RecipesList from "@/components/RecipesList.vue";
+import NutritionIntake from "@/components/NutritionIntake.vue";
+import InventoryList from "@/components/InventoryList.vue";
 
-export default {
-  components: {
-    WeekDay,
-    GroceriesList,
-    WaterIntake,
-    ProteinIntake,
-    RecipesList,
-  },
-};
+import { computed, ref } from "vue";
+
+import { usersStore } from "@/store/users";
+import { authStore } from "@/store/auth";
+
+const user = computed(() => {
+  const auth = authStore();
+  return usersStore().getUser(auth.currentUsername);
+});
+
+const today = ref({
+  day: new Date().getDate(),
+  month: new Date().toLocaleString("en-UK", { month: "long" }),
+  dayWeek: new Intl.DateTimeFormat("en-UK", { weekday: "long" }).format(new Date()),
+});
 </script>
 
 <style scoped>
-@media screen and (max-width: 400px) {
-  div {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
-
-    padding: 1rem;
-  }
-}
-
-@media screen and (min-width: 401px) and (max-width: 767px) {
-  div {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
-
-    padding: 1rem;
-  }
-
-  .weekDayComponent,
-  .recipeComponent {
-    grid-column: span 2;
-  }
-}
-
-@media screen and (min-width: 768px) and (max-width: 1022px) {
-  div {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
-
-    padding: 1rem;
-  }
-
-  .weekDayComponent {
-    grid-column: span 2;
-  }
-
-  .recipeComponent {
-    grid-column: span 3;
-  }
-}
-
-@media screen and (min-width: 1023px) {
-  div {
-    height: 100%;
-
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 1rem;
-
-    padding: 1rem;
-  }
-
-  .weekDayComponent,
-  .recipeComponent {
-    grid-column: span 2;
-  }
-}
-
-/* div {
-  height: 100%;
-} */
-
-div > * {
-  overflow: hidden;
-}
+@import "@/assets/styles/MainPage.css";
 </style>

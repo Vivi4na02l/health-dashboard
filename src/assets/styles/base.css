@@ -1,10 +1,10 @@
 :root {
-  --green: #8aff78;
+  --green: #82d800;
   --dark-green: #117e00;
   --even-darker-green: #0c5600;
   --light-green: #e0ffd9;
   --red: #c73c3c;
-  --white: #fbfbfb;
+  --white: #f4f4f4;
 }
 
 .success {
@@ -18,33 +18,43 @@
   box-sizing: border-box;
 }
 
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Outfit", sans-serif;
+}
+
+p,
+span,
+li {
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
 html,
 body {
+  width: 100%;
   min-height: 100vh;
 
   margin: 0;
   padding: 0;
 
-  background: var(--green);
-  background: linear-gradient(335deg, var(--green) 0%, #d0edca 51%, #fff 100%);
+  background-color: var(--white);
+  /* background: var(--green);
+  background: linear-gradient(335deg, var(--green) 0%, #d0edca 51%, #fff 100%); */
 }
 
 #app {
-  /* height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center; */
-
   min-height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-  padding: 2rem 1rem;
 }
 
 .component {
@@ -52,6 +62,21 @@ main {
 }
 
 /** animations */
+/* background colors changing */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 /* fade-in-out animation */
 .fade-enter-active,
 .fade-leave-active {
@@ -79,11 +104,11 @@ main {
 /* moves up on hover */
 .animHigher {
   transition: all 0.2s ease-in-out;
-  box-shadow: 0.44rem 0.44rem 0.44rem rgba(0, 0, 0, 0.195);
+  box-shadow: 0.44rem 0.44rem 0.44rem rgba(0, 0, 0, 0.132);
 }
 .animHigher:hover {
   transform: translateY(-10px);
-  box-shadow: 0.625rem 1rem 0.3rem rgba(0, 0, 0, 0.111);
+  box-shadow: 0.625rem 1rem 0.3rem rgba(0, 0, 0, 0.076);
 }
 
 @media screen and (max-width: 400px) {
@@ -104,5 +129,12 @@ main {
   body,
   html {
     font-size: 14px;
+  }
+}
+
+@media screen and (min-width: 1023px) {
+  body,
+  html {
+    font-size: 16px;
   }
 }

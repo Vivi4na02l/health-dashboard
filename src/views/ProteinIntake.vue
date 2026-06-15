@@ -1,90 +1,92 @@
 <template>
-  <div class="modal" v-show="modal">
-    <div>
-      <header>
-        <h2>Add protein</h2>
-      </header>
+  <div>
+    <div class="modal" v-show="modal">
+      <div>
+        <header>
+          <h4>Add protein</h4>
+        </header>
 
-      <div class="modal-body">
-        <p class="info">
-          You can add either the protein you've taken manually, or add an ingredient that you've
-          eaten and we will calculate the amount of protein for you!
-        </p>
+        <div class="modal-body">
+          <p class="info">
+            You can add either the protein you've taken manually, or add an ingredient that you've
+            eaten and we will calculate the amount of protein for you!
+          </p>
 
-        <form>
-          <span class="formSection">
-            <label for="nbrProtein">Protein:</label>
-            <input type="number" id="nbrProtein" v-model="form.nbrProtein" min="0" />
-            <p>grams</p>
-          </span>
+          <form>
+            <span class="formSection">
+              <label for="nbrProtein">Protein:</label>
+              <input type="number" id="nbrProtein" v-model="form.nbrProtein" min="0" />
+              <p>grams</p>
+            </span>
 
-          <br />
+            <br />
 
-          <span class="formSection">
-            <label for="txtIngredient">Ingredient:</label>
-            <input type="text" id="txtIngredient" v-model="form.txtIngredient" />
-            <p>
-              which is about
-              <span class="ingredientProtein">{{ form.ingredientProtein }}</span> grams
-            </p>
-          </span>
-        </form>
+            <span class="formSection">
+              <label for="txtIngredient">Ingredient:</label>
+              <input type="text" id="txtIngredient" v-model="form.txtIngredient" />
+              <p>
+                which is about
+                <span class="ingredientProtein">{{ form.ingredientProtein }}</span> grams
+              </p>
+            </span>
+          </form>
 
-        <p class="total">Total: {{ form.total }} grams</p>
+          <p class="total">Total: {{ form.total }} grams</p>
+        </div>
+
+        <footer>
+          <button id="btnConfirm" @click="modalConfirm()">Confirm</button>
+          <button id="btnCancel" @click="modal = !modal">Cancel</button>
+        </footer>
+      </div>
+    </div>
+
+    <section class="component">
+      <div class="edit" @click="isEditing = !isEditing">
+        <span v-if="!isEditing">
+          <img src="../assets/images/icon-edit.png" alt="pencil icon" />
+          <p>edit goal</p>
+        </span>
+        <img v-else src="../assets/images/icon-close.png" alt="red X close icon" />
       </div>
 
-      <footer>
-        <button id="btnConfirm" @click="modalConfirm()">Confirm</button>
-        <button id="btnCancel" @click="modal = !modal">Cancel</button>
-      </footer>
-    </div>
-  </div>
+      <h2>PROTEIN</h2>
 
-  <section class="component">
-    <div class="edit" @click="isEditing = !isEditing">
-      <span v-if="!isEditing">
-        <img src="../assets/images/icon-edit.png" alt="pencil icon" />
-        <p>edit goal</p>
-      </span>
-      <img v-else src="../assets/images/icon-close.png" alt="red X close icon" />
-    </div>
-
-    <h2>PROTEIN</h2>
-
-    <div class="showingUserData">
-      <label for="protein">Goal:</label>
-      <input
-        id="protein"
-        :type="isEditing ? 'number' : 'text'"
-        :disabled="!isEditing"
-        :class="isEditing ? null : 'isDisabled'"
-        min="0"
-        v-model="protein.goal"
-      />
-      <p>grams</p>
-    </div>
-
-    <transition name="fade" mode="out-in">
-      <div v-if="protein.achieved" class="showingUserData">
-        <p>&#x2714; Achieved today:</p>
-        <p class="proteinProgress">{{ protein.eaten }}</p>
+      <div class="showingUserData">
+        <label for="protein">Goal:</label>
+        <input
+          id="protein"
+          :type="isEditing ? 'number' : 'text'"
+          :disabled="!isEditing"
+          :class="isEditing ? null : 'isDisabled'"
+          min="0"
+          v-model="protein.goal"
+        />
         <p>grams</p>
       </div>
 
-      <div v-else>
-        <div v-if="protein.eaten < protein.goal" class="showingUserData">
-          <p>&#10008; Only</p>
-          <p class="proteinProgress">{{ protein.left }}</p>
-          <p>grams left to go</p>
+      <transition name="fade" mode="out-in">
+        <div v-if="protein.achieved" class="showingUserData">
+          <p>&#x2714; Achieved today:</p>
+          <p class="proteinProgress">{{ protein.eaten }}</p>
+          <p>grams</p>
         </div>
-        <div v-else>
-          <p>Congrats, you achieved your daily goal!</p>
-        </div>
-      </div>
-    </transition>
 
-    <button @click="modal = !modal" class="addProtein">Add protein</button>
-  </section>
+        <div v-else>
+          <div v-if="protein.eaten < protein.goal" class="showingUserData">
+            <p>&#10008; Only</p>
+            <p class="proteinProgress">{{ protein.left }}</p>
+            <p>grams left to go</p>
+          </div>
+          <div v-else>
+            <p>Congrats, you achieved your daily goal!</p>
+          </div>
+        </div>
+      </transition>
+
+      <button @click="modal = !modal" class="addProtein">Add protein</button>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">

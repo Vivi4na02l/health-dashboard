@@ -1,4 +1,3 @@
-import ShoppingList from "@/components/ShoppingList.vue";
 import { defineStore } from "pinia";
 
 export const usersStore = defineStore("users", {

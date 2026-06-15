@@ -3,10 +3,8 @@ import NavBar from "./components/NavBar.vue";
 </script>
 
 <template>
-  <div id="app">
-    <header v-if="!$route.meta.hideNavBar">
-      <NavBar />
-    </header>
+  <div id="app" :class="{ navbarIsActive: $route.meta.requiresAuth }">
+    <NavBar v-if="!$route.meta.hideNavBar" />
 
     <main>
       <router-view v-slot="{ Component }">
@@ -19,11 +17,25 @@ import NavBar from "./components/NavBar.vue";
 </template>
 
 <style scoped>
-header {
-  height: 20%;
+@media screen and (min-width: 768px) {
+  #app.navbarIsActive {
+    display: grid;
+    grid-template-columns: min-content auto;
+    overflow: hidden;
+  }
+
+  #app {
+    overflow: hidden;
+  }
+}
+
+#app {
+  width: 100%;
+  height: 100vh;
 }
 
 main {
-  height: 80%;
+  width: 100%;
+  overflow-y: auto;
 }
 </style>

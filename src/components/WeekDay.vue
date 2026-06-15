@@ -1,8 +1,8 @@
 <template>
   <section class="component">
     <div id="day">
-      <p>{{ today.day }} {{ today.month }}</p>
-      <h2>{{ today.dayWeek }}</h2>
+      <p>{{ today.day }} of {{ today.month }}</p>
+      <p class="subtitle">{{ today.dayWeek }}</p>
     </div>
 
     <div v-if="!getWeek[today.dayWeek.toLocaleLowerCase()].length">
@@ -14,9 +14,19 @@
       <Transition name="fade" mode="out-in">
         <div :key="currentActivity?.activity">
           <img :src="currentActivity?.img" :alt="'person ' + currentActivity?.activity" />
-          <p>Today is day of {{ currentActivity?.activity }}!</p>
         </div>
       </Transition>
+
+      <p v-if="getWeek[today.dayWeek.toLocaleLowerCase()].length == 1">
+        Today is day of <span class="activity">{{ currentActivity?.activity }}</span
+        >!
+      </p>
+
+      <p v-else>
+        You have
+        <span class="activity">{{ getWeek[today.dayWeek.toLocaleLowerCase()].length }}</span>
+        activities assigned for today!
+      </p>
     </div>
   </section>
 </template>
@@ -68,6 +78,7 @@ export default {
 
   unmounted() {
     this.currentIndex = 0;
+    clearInterval(interval);
   },
 
   computed: {
@@ -114,24 +125,29 @@ export default {
 </script>
 
 <style scoped>
+@import "@/assets/styles/MainPageComponents.css";
+
 section {
   display: grid;
   grid-template-columns: 1fr 2fr;
 
-  padding: 1rem;
-
-  background-color: var(--light-green);
+  background-color: #fff;
 }
 
-section div {
+div {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: 0.5rem;
 }
 
 #day {
   border-right: solid 0.1rem #000;
+}
+
+.activity {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 399px) {

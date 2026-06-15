@@ -3,7 +3,10 @@ import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/views/MainPage.vue";
 import AuthenticationForm from "@/views/AuthenticationForm.vue";
 import WeekDay from "@/views/WeekDay.vue";
+import WaterIntake from "@/views/WaterIntake.vue";
+import ProteinIntake from "@/views/ProteinIntake.vue";
 import PantryList from "@/views/PantryList.vue";
+import ShoppingList from "@/views/ShoppingList.vue";
 import RecipesList from "@/views/RecipesList.vue";
 
 const routes = [
@@ -11,25 +14,43 @@ const routes = [
     path: "/",
     name: "Home",
     component: MainPage,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavBar: false },
   },
   {
     path: "/week-day",
     name: "Week",
     component: WeekDay,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavBar: false },
+  },
+  {
+    path: "/water-intake",
+    name: "Water",
+    component: WaterIntake,
+    meta: { requiresAuth: true, hideNavBar: false },
+  },
+  {
+    path: "/protein-intake",
+    name: "Protein",
+    component: ProteinIntake,
+    meta: { requiresAuth: true, hideNavBar: false },
   },
   {
     path: "/pantry",
     name: "Pantry",
     component: PantryList,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavBar: false },
+  },
+  {
+    path: "/shopping",
+    name: "Shopping",
+    component: ShoppingList,
+    meta: { requiresAuth: true, hideNavBar: false },
   },
   {
     path: "/recipes",
     name: "Recipes",
     component: RecipesList,
-    meta: { requiresAuth: true },
+    meta: { requiresAuth: true, hideNavBar: false },
   },
   {
     path: "/auth",

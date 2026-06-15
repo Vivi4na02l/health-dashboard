@@ -1,50 +1,47 @@
 <template>
   <nav>
-    <h1>Health <span>(still in development)</span></h1>
+    <span>
+      <img src="@/assets/images/logo.png" alt="app logo of an apple with a cardiac graphic" />
+      <h1>NutriDash</h1>
+    </span>
 
-    <div class="right">
-      <div class="desktop-menu">
+    <div class="desktop-menu">
+      <ul>
+        <div class="slider"></div>
+
+        <li
+          v-for="item in items"
+          :key="item.key"
+          :class="{ active: $route.name === item.key }"
+          @click="changePage(item.key, $event)"
+        >
+          {{ item.label }}
+        </li>
+      </ul>
+
+      <button class="btn-logout" @click="logout()">Logout</button>
+    </div>
+
+    <div class="mobile-menu">
+      <button class="hamburger" @click="isMenuOpen = !isMenuOpen">
+        <img class="hamburgerMenu" src="../assets/images/hamburger.png" alt="menu hamburger icon" />
+      </button>
+
+      <div v-if="isMenuOpen" class="dropdown">
         <ul>
-          <div class="slider" :style="sliderStyle"></div>
-
           <li
             v-for="item in items"
             :key="item.key"
-            :class="{ active: $route.name === item.key }"
-            @click="changePage(item.key, $event)"
+            @click="
+              changePage(item.key);
+              isMenuOpen = false;
+            "
           >
             {{ item.label }}
           </li>
         </ul>
 
         <button class="btn-logout" @click="logout()">Logout</button>
-      </div>
-
-      <div class="mobile-menu">
-        <button class="hamburger" @click="isMenuOpen = !isMenuOpen">
-          <img
-            class="hamburgerMenu"
-            src="../assets/images/hamburger.png"
-            alt="menu hamburger icon"
-          />
-        </button>
-
-        <div v-if="isMenuOpen" class="dropdown">
-          <ul>
-            <li
-              v-for="item in items"
-              :key="item.key"
-              @click="
-                changePage(item.key);
-                isMenuOpen = false;
-              "
-            >
-              {{ item.label }}
-            </li>
-          </ul>
-
-          <button class="btn-logout" @click="logout()">Logout</button>
-        </div>
       </div>
     </div>
   </nav>
@@ -60,34 +57,37 @@ export default {
 
       items: [
         { key: "Home", label: "Dashboard" },
-        { key: "Week", label: "Week day" },
-        { key: "Pantry", label: "Groceries" },
+        { key: "Week", label: "Activities" },
+        { key: "Water", label: "Water" },
+        { key: "Protein", label: "Protein" },
+        { key: "Pantry", label: "Pantry" },
+        { key: "Shopping", label: "Shopping list" },
         { key: "Recipes", label: "Recipes" },
       ],
 
-      sliderStyle: {
-        width: "0px",
-        transform: "translateX(0px)",
-      },
+      // sliderStyle: {
+      //   width: "0px",
+      //   transform: "translateX(0px)",
+      // },
     };
   },
 
-  mounted() {
-    this.$nextTick(() => {
-      this.moveSlider(this.$el.querySelector(".active"));
-    });
-  },
+  // mounted() {
+  //   this.$nextTick(() => {
+  //     this.moveSlider(this.$el.querySelector(".active"));
+  //   });
+  // },
 
-  watch: {
-    $route() {
-      this.$nextTick(() => {
-        const activeElement = this.$el.querySelector(".active");
-        if (activeElement) {
-          this.moveSlider(activeElement);
-        }
-      });
-    },
-  },
+  // watch: {
+  //   $route() {
+  //     this.$nextTick(() => {
+  //       const activeElement = this.$el.querySelector(".active");
+  //       if (activeElement) {
+  //         this.moveSlider(activeElement);
+  //       }
+  //     });
+  //   },
+  // },
 
   methods: {
     logout() {
@@ -99,41 +99,91 @@ export default {
       this.$router.push({ name: `${page}` });
     },
 
-    moveSlider(element) {
-      const { offsetLeft, offsetWidth } = element;
+    // moveSlider(element) {
+    //   const { offsetLeft, offsetWidth } = element;
 
-      this.sliderStyle = {
-        width: offsetWidth + "px",
-        transform: `translateX(${offsetLeft}px)`,
-      };
-    },
+    //   this.sliderStyle = {
+    //     width: offsetWidth + "px",
+    //     transform: `translateX(${offsetLeft}px)`,
+    //   };
+    // },
   },
 };
 </script>
 
 <style scoped>
-h1 span {
-  color: red;
-  font-size: 1.2rem;
-}
-
 nav {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  position: sticky;
+  top: 0;
 
-  display: flex;
-  justify-content: space-between;
+  width: 100%;
+
+  background-color: #fff;
+  border-right: solid 0.1rem #dddddd;
 }
 
-.right {
-  display: flex;
-  align-items: center;
+span > img {
+  width: 2rem;
 }
 
 .desktop-menu {
+  width: 100%;
+  height: 100%;
+
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
+}
+
+ul {
+  padding: 0;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+li {
+  cursor: pointer;
+
+  padding: 1rem;
+  border-radius: 0.5rem;
+  width: 100%;
+
+  list-style: none;
+}
+
+li:hover {
+  color: #fff;
+  background-color: var(--green);
+}
+
+.active {
+  color: #fff;
+  background-color: var(--green);
+}
+
+a {
+  text-decoration: none;
+}
+
+.btn-logout {
+  cursor: pointer;
+
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  width: 100%;
+
+  background-color: var(--red);
+  color: #fff;
+}
+.btn-logout:hover {
+  background-color: #ae2b2b;
 }
 
 .mobile-menu {
@@ -145,76 +195,20 @@ nav {
   width: 2.5rem;
 }
 
-div {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-ul {
-  position: relative;
-
-  border-radius: 100px;
-  padding: 0;
-
-  display: flex;
-
-  background-color: var(--white);
-
-  overflow: hidden;
-}
-
-li {
-  cursor: pointer;
-
-  position: relative;
-  padding: 1rem;
-
-  list-style: none;
-  z-index: 2;
-}
-
-.slider {
-  position: absolute;
-  top: 0;
-  left: 0;
-
-  height: 100%;
-
-  border-radius: 100px;
-
-  color: #fff;
-  background: #000;
-
-  transition:
-    transform 0.3s ease,
-    width 0.3s ease;
-  z-index: 1;
-}
-
-a {
-  text-decoration: none;
-}
-
-.active {
-  color: var(--white);
-}
-
-.btn-logout {
-  cursor: pointer;
-
-  border: none;
-  border-radius: 100px;
-  padding: 1rem;
-
-  background-color: var(--red);
-  color: #fff;
-}
-.btn-logout:hover {
-  background-color: #ae2b2b;
-}
-
 @media screen and (max-width: 767px) {
+  nav {
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  nav > span {
+    display: flex;
+    align-items: center;
+  }
+
   .desktop-menu {
     display: none;
   }
@@ -255,6 +249,31 @@ a {
 
   .dropdown li {
     padding: 0.5rem 1rem;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  nav {
+    padding-left: 2rem;
+    padding-right: 2rem;
+
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  nav > span {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
   }
 }
 </style>
