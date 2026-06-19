@@ -72,6 +72,18 @@ export default {
     };
   },
 
+  computed: {
+    todaysDate() {
+      const now = new Date();
+
+      const day = String(now.getDate()).padStart(2, "0");
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const year = now.getFullYear();
+
+      return `${day}${month}${year}`;
+    },
+  },
+
   methods: {
     toggleAuth() {
       this.msg = "";
@@ -81,17 +93,17 @@ export default {
 
     registerUser() {
       const useAuthStore = authStore();
-      const today = {
-        day: new Date().getDate(),
-        month: new Date().getMonth() + 1,
-        year: new Date().getFullYear(),
-      };
+      // const today = {
+      //   day: new Date().getDate(),
+      //   month: new Date().getMonth() + 1,
+      //   year: new Date().getFullYear(),
+      // };
 
       const result = useAuthStore.register(
         this.register.username,
         this.register.password,
         this.register.passwordRepeat,
-        today,
+        this.todaysDate,
       );
 
       this.msg = result.msg;

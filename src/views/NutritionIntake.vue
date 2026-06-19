@@ -81,19 +81,19 @@
             v-if="!goalEdit"
             src="../assets/images/icon-edit.png"
             alt="pencil"
-            @click="goalEdit = true"
+            @click="openGoalEdit"
           />
           <img
             v-else
             src="../assets/images/icon-close-black.png"
             alt="pencil"
-            @click="goalEdit = false"
+            @click="closeGoalEdit"
           />
         </header>
 
         <p v-if="!goalEdit">{{ userNutrition.goal }} {{ userNutrition.unit }}</p>
 
-        <input v-else type="text" v-model="nutritionGoal" />
+        <input v-else type="text" v-model.number="inputGoal" />
       </div>
     </section>
   </aside>
@@ -109,7 +109,6 @@ import { useRoute } from "vue-router";
 import { usersStore } from "@/store/users";
 import { authStore } from "@/store/auth";
 
-const goalEdit = ref(false);
 const route = useRoute();
 const type = route.query.type as string;
 
@@ -166,7 +165,25 @@ const button = computed(() => {
   }
 });
 
+// logic to change goal:
+const goalEdit = ref(false);
+const inputGoal = ref(0);
 const nutritionGoal = ref(userNutrition.value.goal);
+
+function openGoalEdit() {
+  inputGoal.value = userNutrition.value.goal;
+  goalEdit.value = true;
+}
+
+function closeGoalEdit() {
+  if (inputGoal.value != nutritionGoal.value) {
+    nutritionGoal.value = inputGoal.value;
+    const auth = authStore();
+    usersStore().changeNutritionGoal(auth.currentUsername, type, inputGoal.value);
+  }
+
+  goalEdit.value = false;
+}
 </script>
 
 <style scoped>

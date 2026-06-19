@@ -29,16 +29,7 @@ export const authStore = defineStore("auth", {
 
         // if passwords match
         if (password == passwordR) {
-          // date of account creation
-          let creationDate;
-          if (today.month <= 9) {
-            let month = "0" + today.month;
-            creationDate = today.day + "" + month + "" + today.year;
-          } else {
-            creationDate = today.day + "" + today.month + "" + today.year;
-          }
-
-          users.addUser(username, password, creationDate);
+          users.addUser(username, password, today);
 
           return { gotRegistered: true, msg: "Account created successfully" };
 

@@ -45,7 +45,7 @@ export const usersStore = defineStore("users", {
   actions: {
     updateArray() {
       // this.users = users;
-      localStorage.users = JSON.stringify(this.users);
+      localStorage.setItem("users", JSON.stringify(this.users));
     },
 
     /**
@@ -205,6 +205,28 @@ export const usersStore = defineStore("users", {
      */
     getUser(username) {
       return this.users.find((user) => user.username == username);
+    },
+
+    /**
+     * changes the goal of the nutrition targeted (which can be: water, protein, calories)
+     */
+    changeNutritionGoal(username, type, newGoal) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      const indexType = user.nutrition.findIndex((pos) => pos.type == type.toLowerCase());
+
+      if (indexType === -1) {
+        return { txt: "Nutrition type not found!", success: false };
+      }
+
+      user.nutrition[indexType].goal = newGoal;
+
+      this.updateArray();
+      return { txt: `Changed goal of ${type}!`, success: true };
     },
 
     /**
