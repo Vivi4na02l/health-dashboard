@@ -7,7 +7,7 @@
 
     <div v-if="!getWeek[today.dayWeek.toLocaleLowerCase()].length">
       <img src="../assets/images/icon-lazy.png" alt="lazy animal" />
-      <p>You have no activities assign for {{ today.dayWeek }}s.</p>
+      <p>You have no activities assigned for {{ today.dayWeek }}s.</p>
     </div>
 
     <div v-else>

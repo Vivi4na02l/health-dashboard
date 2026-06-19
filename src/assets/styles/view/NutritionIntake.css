@@ -1,0 +1,120 @@
+aside {
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.nutritionDisplay {
+  border-radius: 1rem;
+  padding: 2rem;
+  background-color: #fff;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nutritionDisplay header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nutritionDisplay header img {
+  width: 2rem;
+}
+
+h3 {
+  font-size: 2rem;
+}
+
+.bgCalories {
+  background: linear-gradient(-45deg, #abffae, #6bff5a, #a4ff34, #c0ff72);
+}
+
+.bgWater {
+  background: linear-gradient(-45deg, #abfff0, #5bffff, #48ffbf, #72ffc0);
+}
+
+.bgProtein {
+  background: linear-gradient(-45deg, #ffff72, #ffc077, #ff941a, #ffff00);
+}
+
+.backgroundColorShift {
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+}
+
+.progressBar {
+  border-radius: 2rem;
+  border: #000 0.1rem solid;
+
+  width: 100%;
+  height: 2rem;
+
+  background-color: #f2f2f2;
+}
+
+.progressFill {
+  border-radius: 2rem;
+  height: 100%;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.buttons button {
+  cursor: pointer;
+
+  border: none;
+  border-radius: 0.5rem;
+  padding: 1rem;
+
+  transition: all 0.2s ease-in-out;
+}
+
+.buttons button:hover {
+  transform: translateY(-5px);
+}
+
+.nutritionInfo {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.nutritionInfo div {
+  border-radius: 1rem;
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  background-color: #fff;
+}
+
+.nutritionInfo div header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nutritionInfo img {
+  cursor: pointer;
+  width: 1.5rem;
+}
+
+.nutritionInfo div p,
+.nutritionInfo input {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.nutritionInfo input {
+  width: min-content;
+}

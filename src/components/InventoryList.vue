@@ -11,7 +11,7 @@
                 ? pantryIcon
                 : recipesIcon
         "
-        alt="icon to represent pantry"
+        alt="icon to represent inventory section"
       />
       <h4>
         {{
@@ -67,7 +67,7 @@ const ingredientsData = computed(() => {
     }
 
     return nbrIngredients;
-  } else {
+  } else if (props.ingredientType == "IngredientsPantry") {
     let nbrIngredients = 0;
 
     for (const ingredient of user.value.ingredients) {
@@ -77,6 +77,8 @@ const ingredientsData = computed(() => {
     }
 
     return nbrIngredients;
+  } else {
+    return user.value.recipes.length;
   }
 });
 </script>

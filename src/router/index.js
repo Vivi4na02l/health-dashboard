@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import MainPage from "@/views/MainPage.vue";
 import AuthenticationForm from "@/views/AuthenticationForm.vue";
 import WeekDay from "@/views/WeekDay.vue";
+import NutritionIntake from "@/views/NutritionIntake.vue";
 import WaterIntake from "@/views/WaterIntake.vue";
 import ProteinIntake from "@/views/ProteinIntake.vue";
 import PantryList from "@/views/PantryList.vue";
@@ -20,6 +21,15 @@ const routes = [
     path: "/week-day",
     name: "Week",
     component: WeekDay,
+    meta: { requiresAuth: true, hideNavBar: false },
+  },
+  {
+    path: "/nutrition-intake",
+    name: "Nutrition",
+    component: NutritionIntake,
+    // props: (route) => ({
+    //   type: route.query.type,
+    // }),
     meta: { requiresAuth: true, hideNavBar: false },
   },
   {

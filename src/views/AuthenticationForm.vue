@@ -81,11 +81,17 @@ export default {
 
     registerUser() {
       const useAuthStore = authStore();
+      const today = {
+        day: new Date().getDate(),
+        month: new Date().getMonth() + 1,
+        year: new Date().getFullYear(),
+      };
 
       const result = useAuthStore.register(
         this.register.username,
         this.register.password,
         this.register.passwordRepeat,
+        today,
       );
 
       this.msg = result.msg;

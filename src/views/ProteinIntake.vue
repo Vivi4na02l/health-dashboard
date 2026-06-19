@@ -168,6 +168,8 @@ export default {
 </script>
 
 <style scoped>
+@import "@/assets/styles/view/NutritionIntake.css";
+
 .modal {
   position: absolute;
   top: 0;
@@ -254,6 +256,7 @@ export default {
 }
 
 section {
+  margin: 2rem;
   position: relative;
 
   display: flex;

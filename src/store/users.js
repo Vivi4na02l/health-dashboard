@@ -6,38 +6,38 @@ export const usersStore = defineStore("users", {
       users: localStorage.users
         ? JSON.parse(localStorage.users)
         : [
-            {
-              username: "user",
-              password: "1234",
-              ingredients: [
-                // {
-                //   ingredient: 'example',
-                //   weight: 10,
-                //   protein: 10,
-                //   quantity: 1,
-                //   onShoppingList: false,
-                // },
-              ],
-              recipes: [
-                // {
-                //   name: 'francesinha',
-                //   image: 'https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ',
-                //   description: 'sanduíche portuguesa deliciosa',
-                //   ingredientsList: [],
-                //   instructions: [],
-                // }
-              ],
-              week: {
-                // activities: [],
-                // monday: [],
-                // tuesday: [],
-                // wednesday: [],
-                // thrusday: [],
-                // friday: [],
-                // saturday: [],
-                // sunday: [],
-              },
-            },
+            // {
+            //   username: "user",
+            //   password: "1234",
+            //   ingredients: [
+            //     {
+            //       ingredient: 'example',
+            //       weight: 10,
+            //       protein: 10,
+            //       quantity: 1,
+            //       onShoppingList: false,
+            //     },
+            //   ],
+            //   recipes: [
+            //     {
+            //       name: 'francesinha',
+            //       image: 'https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ',
+            //       description: 'sanduíche portuguesa deliciosa',
+            //       ingredientsList: [],
+            //       instructions: [],
+            //     }
+            //   ],
+            //   week: {
+            //     activities: [],
+            //     monday: [],
+            //     tuesday: [],
+            //     wednesday: [],
+            //     thrusday: [],
+            //     friday: [],
+            //     saturday: [],
+            //     sunday: [],
+            //   },
+            // },
           ],
     };
   },
@@ -53,10 +53,48 @@ export const usersStore = defineStore("users", {
      * @param {*} username
      * @param {*} password
      */
-    addUser(username, password) {
+    addUser(username, password, today) {
       this.users.push({
         username: username,
         password: password,
+        nutrition: [
+          {
+            type: "protein",
+            unit: "g",
+            goal: "70",
+            history: [
+              {
+                date: today,
+                reachedGoal: false,
+                consumed: "0",
+              },
+            ],
+          },
+          {
+            type: "water",
+            unit: "L",
+            goal: "2.5",
+            history: [
+              {
+                date: today,
+                reachedGoal: false,
+                consumed: "0",
+              },
+            ],
+          },
+          {
+            type: "calories",
+            unit: "kcal",
+            goal: "2.5",
+            history: [
+              {
+                date: today,
+                reachedGoal: false,
+                consumed: "0",
+              },
+            ],
+          },
+        ],
         ingredients: [
           {
             ingredient: "Straw potato",

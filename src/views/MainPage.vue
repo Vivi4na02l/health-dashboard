@@ -15,17 +15,17 @@
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Calories', unit: 'kcal' }"
-          @click="this.$router.push({ name: 'Water' })"
+          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Calories' } })"
         />
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Water', unit: 'L' }"
-          @click="this.$router.push({ name: 'Water' })"
+          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Water' } })"
         />
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Protein', unit: 'g' }"
-          @click="this.$router.push({ name: 'Protein' })"
+          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Protein' } })"
         />
       </article>
 
