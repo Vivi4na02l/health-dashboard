@@ -207,6 +207,22 @@ export const usersStore = defineStore("users", {
       return this.users.find((user) => user.username == username);
     },
 
+    addTodaysDate(username, today) {
+      const user = this.getUser(username);
+
+      for (let i = 0; i < user.nutrition.length; i++) {
+        const nutrient = user.nutrition[i];
+
+        nutrient.history.push({
+          date: today,
+          reachedGoal: false,
+          consumed: "0",
+        });
+      }
+
+      this.updateArray();
+    },
+
     /**
      * changes the goal of the nutrition targeted (which can be: water, protein, calories)
      */

@@ -73,7 +73,7 @@ import WeekDay from "@/components/WeekDay.vue";
 import NutritionIntake from "@/components/NutritionIntake.vue";
 import InventoryList from "@/components/InventoryList.vue";
 
-import { computed, ref } from "vue";
+import { computed, ref, onBeforeMount } from "vue";
 
 import { usersStore } from "@/store/users";
 import { authStore } from "@/store/auth";
@@ -87,6 +87,24 @@ const today = ref({
   day: new Date().getDate(),
   month: new Date().toLocaleString("en-UK", { month: "long" }),
   dayWeek: new Intl.DateTimeFormat("en-UK", { weekday: "long" }).format(new Date()),
+});
+
+const todaysDate = computed(() => {
+  const now = new Date();
+
+  const day = String(now.getDate()).padStart(2, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const year = now.getFullYear();
+
+  return `${day}${month}${year}`;
+});
+
+onBeforeMount(() => {
+  const auth = authStore();
+
+  if (!user.value.nutrition[0].history.find((pos) => pos.date === todaysDate.value)) {
+    usersStore().addTodaysDate(auth.currentUsername, todaysDate);
+  }
 });
 </script>
 
