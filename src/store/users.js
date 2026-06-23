@@ -95,9 +95,11 @@ export const usersStore = defineStore("users", {
             ],
           },
         ],
+        groups: ["Protein", "Dairy", "Grains", "Produce", "Pantry", "Canned", "Frozen", "Snacks"],
         ingredients: [
           {
-            ingredient: "Straw potato",
+            ingredient: "Potato sticks",
+            group: "Pantry",
             weight: 100,
             protein: 6.9,
             quantity: 0,
@@ -105,6 +107,7 @@ export const usersStore = defineStore("users", {
           },
           {
             ingredient: "Canned tuna",
+            group: "Canned",
             weight: 100,
             protein: 25,
             quantity: 0,
@@ -112,6 +115,7 @@ export const usersStore = defineStore("users", {
           },
           {
             ingredient: "Onion",
+            group: "Produce",
             weight: 100,
             protein: 1,
             quantity: 0,
@@ -119,6 +123,7 @@ export const usersStore = defineStore("users", {
           },
           {
             ingredient: "Garlic",
+            group: "Produce",
             weight: 5,
             protein: 0.2,
             quantity: 0,
@@ -126,6 +131,7 @@ export const usersStore = defineStore("users", {
           },
           {
             ingredient: "Egg",
+            group: "Protein",
             weight: 63,
             protein: 6,
             quantity: 0,
@@ -151,7 +157,7 @@ export const usersStore = defineStore("users", {
                 weight: 200,
               },
               {
-                ingredient: "Straw potato",
+                ingredient: "Potato sticks",
                 weight: 250,
               },
               {

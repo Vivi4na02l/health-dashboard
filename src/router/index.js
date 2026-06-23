@@ -6,6 +6,7 @@ import WeekDay from "@/views/WeekDay.vue";
 import NutritionIntake from "@/views/NutritionIntake.vue";
 import WaterIntake from "@/views/WaterIntake.vue";
 import ProteinIntake from "@/views/ProteinIntake.vue";
+import IngredientsList from "@/views/IngredientsList.vue";
 import PantryList from "@/views/PantryList.vue";
 import ShoppingList from "@/views/ShoppingList.vue";
 import RecipesList from "@/views/RecipesList.vue";
@@ -27,9 +28,6 @@ const routes = [
     path: "/nutrition-intake",
     name: "Nutrition",
     component: NutritionIntake,
-    // props: (route) => ({
-    //   type: route.query.type,
-    // }),
     meta: { requiresAuth: true, hideNavBar: false },
   },
   {
@@ -42,6 +40,12 @@ const routes = [
     path: "/protein-intake",
     name: "Protein",
     component: ProteinIntake,
+    meta: { requiresAuth: true, hideNavBar: false },
+  },
+  {
+    path: "/ingredients",
+    name: "Ingredients",
+    component: IngredientsList,
     meta: { requiresAuth: true, hideNavBar: false },
   },
   {

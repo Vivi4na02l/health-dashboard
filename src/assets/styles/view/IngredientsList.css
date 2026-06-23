@@ -1,0 +1,129 @@
+aside {
+  padding: 2rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+header,
+header span {
+  display: flex;
+  align-items: center;
+}
+
+header {
+  justify-content: space-between;
+}
+
+header span {
+  gap: 0.5rem;
+}
+
+header img {
+  width: 2rem;
+}
+
+header button {
+  border-radius: 1rem;
+  border: none;
+  padding: 1rem;
+
+  color: #fff;
+  background-color: var(--green);
+}
+
+.infoSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.infoSection div {
+  border-radius: 1rem;
+  padding: 2rem;
+  background-color: #fff;
+}
+
+.filtersSection {
+  display: flex;
+  gap: 1rem;
+}
+
+.filtersSection * {
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 0.1rem solid var(--grey);
+}
+
+.filtersSection *:focus {
+  border-color: var(--green);
+  border-width: 0.1rem;
+  border-style: solid;
+  outline: none;
+}
+
+table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 0 1rem;
+}
+
+th {
+  text-align: left;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  border-top-left-radius: 1rem;
+  border-bottom-left-radius: 1rem;
+  padding-left: 1rem;
+  width: 30%;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  border-bottom-right-radius: 1rem;
+  border-top-right-radius: 1rem;
+  padding-right: 1rem;
+  width: 20%;
+}
+
+tbody tr {
+  background-color: #fff;
+}
+
+td {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.buttons button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+}
+
+.btnEdit {
+  background-color: var(--light-green);
+}
+.btnEdit:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: var(--green);
+}
+
+.btnRemove {
+  background-color: var(--light-red);
+}
+.btnRemove:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: var(--red);
+}
