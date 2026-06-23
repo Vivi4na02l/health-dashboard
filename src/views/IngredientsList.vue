@@ -1,5 +1,47 @@
 <template>
   <aside>
+    <!-- modals -->
+    <div class="modalBackground" v-show="modalAddIngredient">
+      <dialog :open="modalAddIngredient">
+        <h2>New ingredient</h2>
+        <input type="text" placeholder="Name of the ingredient" v-model="newIngredient.name" />
+        <input
+          type="number"
+          placeholder="Ingredient's weight"
+          v-model.number="newIngredient.weight"
+        />
+        <input
+          type="number"
+          placeholder="Protein per 100g"
+          v-model.number="newIngredient.protein"
+        />
+        <input
+          type="number"
+          placeholder="Calories per 100g"
+          v-model.number="newIngredient.calories"
+        />
+        <select name="ingredientGroup" v-model="newIngredient.group">
+          <option value="">Select group</option>
+          <option v-for="group in user.groups" :key="group" :value="group">{{ group }}</option>
+        </select>
+
+        <p
+          class="message"
+          :class="modalMsg.success ? 'messageGreen' : 'messageRed'"
+          v-show="modalMsg.txt != ''"
+        >
+          {{ modalMsg.txt }}
+        </p>
+
+        <footer>
+          <button class="btnConfirm" @click="addNewIngredient()">Add ingredient</button>
+          <button class="btnCancel" @click="((modalAddIngredient = false), (modalOn = false))">
+            Cancel
+          </button>
+        </footer>
+      </dialog>
+    </div>
+
     <header>
       <div>
         <span>
@@ -9,7 +51,7 @@
         <p>Managing ingredients and nutritional information</p>
       </div>
 
-      <button>Add ingredient</button>
+      <button @click="((modalAddIngredient = true), (modalOn = true))">Add ingredient</button>
     </header>
 
     <section class="infoSection">
@@ -58,7 +100,7 @@
             <td>{{ ingredient.group }}</td>
             <td>{{ ingredient.weight }}g</td>
             <td>{{ ingredient.protein }}g</td>
-            <td>kcal</td>
+            <td>{{ ingredient.calories }}kcal</td>
             <td class="buttons">
               <button class="btnEdit">Edit</button>
               <button class="btnRemove">Remove</button>
@@ -75,6 +117,21 @@ import { computed, ref } from "vue";
 
 import { usersStore } from "@/store/users";
 import { authStore } from "@/store/auth";
+
+const newIngredient = ref({
+  name: "",
+  weight: "",
+  protein: "",
+  calories: "",
+  group: "",
+});
+const modalMsg = ref({
+  success: false,
+  txt: "",
+});
+
+const modalOn = ref(false);
+const modalAddIngredient = ref(false);
 
 const filterSearch = ref("");
 const filterOrder = ref("orderAdded");
@@ -168,6 +225,34 @@ const ingredientsArray = computed(() => {
 
   return filteredIngredientsArray;
 });
+
+function addNewIngredient() {
+  const auth = authStore();
+  const users = usersStore();
+
+  const areEmpty = Object.values(newIngredient.value).some(
+    (aboutIngredient) => aboutIngredient == "",
+  );
+
+  if (areEmpty) {
+    modalMsg.value.success = false;
+    modalMsg.value.txt = "All the contents must be filled!";
+  } else {
+    const result = users.addManualIngredient(
+      auth.currentUsername,
+      newIngredient.value.name,
+      newIngredient.value.group,
+      newIngredient.value.weight,
+      newIngredient.value.protein,
+      newIngredient.value.calories,
+    );
+
+    if (result.success) {
+      modalMsg.value.success = result.success;
+      modalMsg.value.txt = result.txt;
+    }
+  }
+}
 </script>
 
 <style scoped>

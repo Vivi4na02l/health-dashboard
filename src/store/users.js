@@ -102,6 +102,7 @@ export const usersStore = defineStore("users", {
             group: "Pantry",
             weight: 100,
             protein: 6.9,
+            calories: 520,
             quantity: 0,
             onShoppingList: false,
           },
@@ -110,6 +111,7 @@ export const usersStore = defineStore("users", {
             group: "Canned",
             weight: 100,
             protein: 25,
+            calories: 116,
             quantity: 0,
             onShoppingList: false,
           },
@@ -118,6 +120,7 @@ export const usersStore = defineStore("users", {
             group: "Produce",
             weight: 100,
             protein: 1,
+            calories: 420,
             quantity: 0,
             onShoppingList: false,
           },
@@ -126,6 +129,7 @@ export const usersStore = defineStore("users", {
             group: "Produce",
             weight: 5,
             protein: 0.2,
+            calories: 0,
             quantity: 0,
             onShoppingList: false,
           },
@@ -134,6 +138,7 @@ export const usersStore = defineStore("users", {
             group: "Protein",
             weight: 63,
             protein: 6,
+            calories: 65,
             quantity: 0,
             onShoppingList: false,
           },
@@ -279,7 +284,7 @@ export const usersStore = defineStore("users", {
      * @param {*} weight
      * @param {*} protein
      */
-    addManualIngredient(username, ingredient, weight, protein) {
+    addManualIngredient(username, ingredient, group, weight, protein, calories) {
       const user = this.getUser(username);
 
       if (!user) {
@@ -289,8 +294,10 @@ export const usersStore = defineStore("users", {
       if (!user.ingredients.find((ing) => ing.ingredient == ingredient)) {
         user.ingredients.push({
           ingredient: ingredient,
+          group: group,
           weight: +weight,
           protein: +protein,
+          calories: +calories,
           quantity: 1,
           onShoppingList: false,
         });
