@@ -89,6 +89,35 @@ const ingredientsData = computed(() => {
   return { ingredients: user.value.ingredients.length, groups: user.value.groups.length };
 });
 
+type Ingredient = {
+  ingredient: string;
+  group: string;
+  weight: number;
+  protein: number;
+  quantity: number;
+  onShoppingList: boolean;
+};
+function orderIngredients(array: Ingredient[], sort: number) {
+  return array.sort(
+    (
+      ingredient1: {
+        ingredient: string;
+      },
+      ingredient2: {
+        ingredient: string;
+      },
+    ) => {
+      if (ingredient1.ingredient > ingredient2.ingredient) {
+        return 1 * sort;
+      } else if (ingredient1.ingredient == ingredient2.ingredient) {
+        return 0;
+      } else {
+        return -1 * sort;
+      }
+    },
+  );
+}
+
 const ingredientsArray = computed(() => {
   if (
     filterSearch.value == "" &&
@@ -98,9 +127,21 @@ const ingredientsArray = computed(() => {
     return user.value.ingredients;
   }
 
-  let filteredIngredientsArray = user.value.ingredients;
+  let filteredIngredientsArray = [...user.value.ingredients];
 
-  // filters by whats written on the input
+  if (filterOrder.value == "orderAdded") {
+    filteredIngredientsArray = [...user.value.ingredients];
+  }
+
+  if (filterOrder.value == "orderAZ") {
+    filteredIngredientsArray = orderIngredients(filteredIngredientsArray, 1);
+  }
+
+  if (filterOrder.value == "orderZA") {
+    filteredIngredientsArray = orderIngredients(filteredIngredientsArray, -1);
+  }
+
+  // filters by whats written in the input
   if (filterSearch.value != "") {
     filteredIngredientsArray = filteredIngredientsArray.filter(
       (ingredient: {
