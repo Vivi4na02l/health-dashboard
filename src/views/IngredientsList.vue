@@ -129,6 +129,7 @@ const ingredientsArray = computed(() => {
 
   let filteredIngredientsArray = [...user.value.ingredients];
 
+  // orders the array by [user option]
   if (filterOrder.value == "orderAdded") {
     filteredIngredientsArray = [...user.value.ingredients];
   }
@@ -152,6 +153,14 @@ const ingredientsArray = computed(() => {
         quantity: number;
         onShoppingList: boolean;
       }) => ingredient.ingredient.toLowerCase().includes(filterSearch.value.toLowerCase()),
+    );
+  }
+
+  // filters by group
+  if (filterGroup.value != "allGroups") {
+    filteredIngredientsArray = filteredIngredientsArray.filter(
+      (ingredient: { ingredient: string; group: string }) =>
+        ingredient.group.toLowerCase() == filterGroup.value.toLowerCase(),
     );
   }
 
