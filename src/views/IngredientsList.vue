@@ -4,7 +4,8 @@
     <div class="modalBackground" v-show="modal.modalOn">
       <article v-show="modal.modalAddIngredient">
         <header>
-          <h2>New ingredient</h2>
+          <h2 v-if="modal.modalType == 'add'">New ingredient</h2>
+          <h2 v-else>Edit ingredient</h2>
         </header>
 
         <input type="text" placeholder="Name of the ingredient" v-model="newIngredient.name" />
@@ -37,10 +38,13 @@
         </p>
 
         <footer>
-          <button class="btnConfirm" @click="addNewIngredient()">Add ingredient</button>
+          <button v-if="modal.modalType == 'add'" class="btnConfirm" @click="addNewIngredient()">
+            Add ingredient
+          </button>
+          <button v-else class="btnConfirm" @click="addNewIngredient()">Confirm changes</button>
           <button
             class="btnCancel"
-            @click="((modal.modalAddIngredient = false), (modal.modalOn = false))"
+            @click="(clearForm(), (modal.modalAddIngredient = false), (modal.modalOn = false))"
           >
             Cancel
           </button>
@@ -78,7 +82,11 @@
         <p>Managing ingredients and nutritional information</p>
       </div>
 
-      <button @click="((modal.modalAddIngredient = true), (modal.modalOn = true))">
+      <button
+        @click="
+          ((modal.modalAddIngredient = true), (modal.modalOn = true), (modal.modalType = 'add'))
+        "
+      >
         Add ingredient
       </button>
     </header>
@@ -129,9 +137,9 @@
             <td>{{ ingredient.group }}</td>
             <td>{{ ingredient.weight }}g</td>
             <td>{{ ingredient.protein }}g</td>
-            <td>{{ ingredient.calories }}kcal</td>
+            <td>{{ ingredient.calories }}cal</td>
             <td class="buttons">
-              <button class="btnEdit">Edit</button>
+              <button class="btnEdit" @click="editIngredient(ingredient)">Edit</button>
               <button class="btnRemove" @click="isRemovingIngredient(ingredient.ingredient)">
                 Remove
               </button>
@@ -159,6 +167,8 @@ const newIngredient = ref({
   group: "",
 });
 
+const changeIngredient = ref("");
+
 let notificationTimer: number | undefined;
 
 const modalMsg = ref({
@@ -168,6 +178,7 @@ const modalMsg = ref({
 
 const modal = ref({
   modalOn: false,
+  modalType: "add",
   modalAddIngredient: false,
   modalRemoveIngredient: false,
 });
@@ -279,31 +290,62 @@ function addNewIngredient() {
     modalMsg.value.success = false;
     modalMsg.value.txt = "All the contents must be filled!";
   } else {
-    const result = users.addManualIngredient(
-      auth.currentUsername,
-      newIngredient.value.name,
-      newIngredient.value.group,
-      newIngredient.value.weight,
-      newIngredient.value.protein,
-      newIngredient.value.calories,
-    );
+    let result;
+    if (modal.value.modalType == "add") {
+      result = users.addManualIngredient(
+        auth.currentUsername,
+        newIngredient.value.name,
+        newIngredient.value.group,
+        newIngredient.value.weight,
+        newIngredient.value.protein,
+        newIngredient.value.calories,
+      );
+    } else {
+      result = users.editIngredient(
+        auth.currentUsername,
+        changeIngredient.value,
+        newIngredient.value.name,
+        newIngredient.value.group,
+        newIngredient.value.weight,
+        newIngredient.value.protein,
+        newIngredient.value.calories,
+      );
+    }
 
-    if (result.success) {
+    if (result) {
       modalMsg.value.success = result.success;
       modalMsg.value.txt = result.txt;
+    }
 
+    if (result.success) {
       modal.value.modalAddIngredient = false;
       modal.value.modalOn = false;
 
-      newIngredient.value = {
-        name: "",
-        weight: "",
-        protein: "",
-        calories: "",
-        group: "",
-      };
+      clearForm();
     }
   }
+}
+
+function editIngredient(ingredient: {
+  ingredient: string;
+  group: string;
+  weight: string;
+  protein: string;
+  calories: string;
+}) {
+  modal.value.modalType = "edit";
+  modal.value.modalAddIngredient = true;
+  modal.value.modalOn = true;
+
+  changeIngredient.value = ingredient.ingredient;
+
+  newIngredient.value = {
+    name: ingredient.ingredient,
+    weight: ingredient.weight,
+    protein: ingredient.protein,
+    calories: ingredient.calories,
+    group: ingredient.group,
+  };
 }
 
 function isRemovingIngredient(ingredient: string) {
@@ -325,6 +367,16 @@ function removeIngredient() {
     modal.value.modalRemoveIngredient = false;
     modal.value.modalOn = false;
   }
+}
+
+function clearForm() {
+  newIngredient.value = {
+    name: "",
+    weight: "",
+    protein: "",
+    calories: "",
+    group: "",
+  };
 }
 
 // controls how long the notification is on for

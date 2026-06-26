@@ -32,6 +32,10 @@ header button {
   color: #fff;
   background-color: var(--green);
 }
+header button:hover {
+  cursor: pointer;
+  background-color: var(--dark-green);
+}
 
 .infoSection {
   display: grid;

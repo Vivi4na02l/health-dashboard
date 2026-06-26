@@ -303,6 +303,48 @@ export const usersStore = defineStore("users", {
       }
     },
 
+    editIngredient(
+      username,
+      oldIngredientName,
+      newIngredientName,
+      group,
+      weight,
+      protein,
+      calories,
+    ) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      if (!user.ingredients.find((ing) => ing.ingredient == oldIngredientName)) {
+        return { txt: "This ingredient doesn't exist!", success: false };
+      } else {
+        if (user.ingredients.find((ing) => ing.ingredient == newIngredientName)) {
+          return { txt: `The ingredient "${newIngredientName}" already exist!`, success: false };
+        } else {
+          const ingredientIndex = user.ingredients.findIndex(
+            (ing) => ing.ingredient == oldIngredientName,
+          );
+
+          user.ingredients[ingredientIndex] = {
+            ingredient: newIngredientName,
+            group: group,
+            weight: +weight,
+            protein: +protein,
+            calories: +calories,
+            quantity: user.ingredients[ingredientIndex].quantity,
+            onShoppingList: user.ingredients[ingredientIndex].onShoppingList,
+          };
+
+          this.updateArray();
+
+          return { txt: "Ingredient changed!", success: true };
+        }
+      }
+    },
+
     /**
      * removes the ingredient the user clicked on
      */
