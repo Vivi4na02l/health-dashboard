@@ -1,9 +1,12 @@
 <template>
   <aside>
     <!-- modals -->
-    <div class="modalBackground" v-show="modalAddIngredient">
-      <dialog :open="modalAddIngredient">
-        <h2>New ingredient</h2>
+    <div class="modalBackground" v-show="modal.modalOn">
+      <article v-show="modal.modalAddIngredient">
+        <header>
+          <h2>New ingredient</h2>
+        </header>
+
         <input type="text" placeholder="Name of the ingredient" v-model="newIngredient.name" />
         <input
           type="number"
@@ -35,11 +38,32 @@
 
         <footer>
           <button class="btnConfirm" @click="addNewIngredient()">Add ingredient</button>
-          <button class="btnCancel" @click="((modalAddIngredient = false), (modalOn = false))">
+          <button
+            class="btnCancel"
+            @click="((modal.modalAddIngredient = false), (modal.modalOn = false))"
+          >
             Cancel
           </button>
         </footer>
-      </dialog>
+      </article>
+
+      <article v-show="modal.modalRemoveIngredient" class="deletingModal">
+        <header>
+          <h2>Warning</h2>
+        </header>
+
+        <p>This action will permanently remove "{{ removingIngredient }}".</p>
+
+        <footer>
+          <button class="btnConfirm" @click="removeIngredient()">Confirm</button>
+          <button
+            class="btnCancel"
+            @click="((modal.modalRemoveIngredient = false), (modal.modalOn = false))"
+          >
+            Cancel
+          </button>
+        </footer>
+      </article>
     </div>
 
     <header>
@@ -51,7 +75,9 @@
         <p>Managing ingredients and nutritional information</p>
       </div>
 
-      <button @click="((modalAddIngredient = true), (modalOn = true))">Add ingredient</button>
+      <button @click="((modal.modalAddIngredient = true), (modal.modalOn = true))">
+        Add ingredient
+      </button>
     </header>
 
     <section class="infoSection">
@@ -103,7 +129,9 @@
             <td>{{ ingredient.calories }}kcal</td>
             <td class="buttons">
               <button class="btnEdit">Edit</button>
-              <button class="btnRemove">Remove</button>
+              <button class="btnRemove" @click="isRemovingIngredient(ingredient.ingredient)">
+                Remove
+              </button>
             </td>
           </tr>
         </tbody>
@@ -125,13 +153,19 @@ const newIngredient = ref({
   calories: "",
   group: "",
 });
+
 const modalMsg = ref({
   success: false,
   txt: "",
 });
 
-const modalOn = ref(false);
-const modalAddIngredient = ref(false);
+const modal = ref({
+  modalOn: false,
+  modalAddIngredient: false,
+  modalRemoveIngredient: false,
+});
+
+const removingIngredient = ref("");
 
 const filterSearch = ref("");
 const filterOrder = ref("orderAdded");
@@ -251,6 +285,24 @@ function addNewIngredient() {
       modalMsg.value.success = result.success;
       modalMsg.value.txt = result.txt;
     }
+  }
+}
+
+function isRemovingIngredient(ingredient: string) {
+  modal.value.modalOn = true;
+  modal.value.modalRemoveIngredient = true;
+  removingIngredient.value = ingredient;
+}
+
+function removeIngredient() {
+  const auth = authStore();
+  const users = usersStore();
+
+  const result = users.removeIngredient(auth.currentUsername, removingIngredient.value);
+
+  if (result.success) {
+    modalMsg.value.success = result.success;
+    modalMsg.value.txt = result.txt;
   }
 }
 </script>

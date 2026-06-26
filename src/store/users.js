@@ -311,6 +311,22 @@ export const usersStore = defineStore("users", {
     },
 
     /**
+     * removes the ingredient the user clicked on
+     */
+    removeIngredient(username, ingredient) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      user.ingredients = user.ingredients.filter((ing) => ing.ingredient != ingredient);
+      this.updateArray();
+
+      return { txt: "Ingredient removed!", success: true };
+    },
+
+    /**
      * changes the quantity of the ingredient triggered
      * @param {*} username user logged in
      * @param {*} ingredient ingredient of which the button as been clicked
