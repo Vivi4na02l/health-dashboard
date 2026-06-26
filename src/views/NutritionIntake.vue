@@ -19,7 +19,14 @@
 
       <div class="progressBar">
         <div
-          :style="{ width: userNutritionToday.consumed == 0 ? '2%' : `${percentage}%` }"
+          :style="{
+            width:
+              userNutritionToday.consumed == 0
+                ? '2%'
+                : percentage > 100
+                  ? '100%'
+                  : `${percentage}%`,
+          }"
           class="progressFill backgroundColorShift"
           :class="{
             bgWater: type === 'Water',
@@ -32,6 +39,7 @@
 
     <section class="buttons">
       <button
+        @click="incrementNutrition(button.lowestIncrement)"
         class="backgroundColorShift"
         :class="{
           bgWater: type === 'Water',
@@ -42,6 +50,7 @@
         +{{ button.lowestIncrement }} {{ userNutrition.unit }}
       </button>
       <button
+        @click="incrementNutrition(button.midIncrement)"
         class="backgroundColorShift"
         :class="{
           bgWater: type === 'Water',
@@ -52,6 +61,7 @@
         +{{ button.midIncrement }} {{ userNutrition.unit }}
       </button>
       <button
+        @click="incrementNutrition(button.highestIncrement)"
         class="backgroundColorShift"
         :class="{
           bgWater: type === 'Water',
@@ -70,8 +80,14 @@
       </div>
 
       <div class="animHigher">
-        <h4>Missing</h4>
-        <p>{{ userNutrition.goal - userNutritionToday.consumed }} {{ userNutrition.unit }}</p>
+        <h4 v-if="userNutrition.goal - userNutritionToday.consumed > 0">Missing</h4>
+        <h4 v-else>🔥 Goal surpassed by</h4>
+        <p v-if="userNutrition.goal - userNutritionToday.consumed > 0">
+          {{ userNutrition.goal - userNutritionToday.consumed }} {{ userNutrition.unit }}
+        </p>
+        <p v-else>
+          {{ -(userNutrition.goal - userNutritionToday.consumed) }} {{ userNutrition.unit }}
+        </p>
       </div>
 
       <div class="animHigher">
@@ -183,6 +199,11 @@ function closeGoalEdit() {
   }
 
   goalEdit.value = false;
+}
+
+function incrementNutrition(increment: number) {
+  const auth = authStore();
+  usersStore().addNutritionConsumedToday(auth.currentUsername, type, todaysDate.value, increment);
 }
 </script>
 

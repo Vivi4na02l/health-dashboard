@@ -3,42 +3,7 @@ import { defineStore } from "pinia";
 export const usersStore = defineStore("users", {
   state() {
     return {
-      users: localStorage.users
-        ? JSON.parse(localStorage.users)
-        : [
-            // {
-            //   username: "user",
-            //   password: "1234",
-            //   ingredients: [
-            //     {
-            //       ingredient: 'example',
-            //       weight: 10,
-            //       protein: 10,
-            //       quantity: 1,
-            //       onShoppingList: false,
-            //     },
-            //   ],
-            //   recipes: [
-            //     {
-            //       name: 'francesinha',
-            //       image: 'https://imgs.search.brave.com/WOSEXf_1ojCjclu8QTFvWrs2sPa6Zx-CVWXyUwf13V0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5nZXR0eWltYWdl/cy5jb20vaWQvNTYy/NDM4NjU5L3Bob3Rv/L2ZyYW5jZXNpbmhh/LmpwZz9zPTYxMng2/MTImdz0wJms9MjAm/Yz1USW5tTXNqSDZP/dDJUR0dSeHZzdS1Y/REJ2dF9XN28wcl9k/YUZFd3gyN0w4PQ',
-            //       description: 'sanduíche portuguesa deliciosa',
-            //       ingredientsList: [],
-            //       instructions: [],
-            //     }
-            //   ],
-            //   week: {
-            //     activities: [],
-            //     monday: [],
-            //     tuesday: [],
-            //     wednesday: [],
-            //     thrusday: [],
-            //     friday: [],
-            //     saturday: [],
-            //     sunday: [],
-            //   },
-            // },
-          ],
+      users: localStorage.users ? JSON.parse(localStorage.users) : [],
     };
   },
 
@@ -84,8 +49,8 @@ export const usersStore = defineStore("users", {
           },
           {
             type: "calories",
-            unit: "kcal",
-            goal: "2.5",
+            unit: "cal",
+            goal: "2500",
             history: [
               {
                 date: today,
@@ -257,7 +222,35 @@ export const usersStore = defineStore("users", {
     },
 
     /**
-     * adds activity choosen to the parameter of the object corresponding to the week selected
+     * lets user add the amount of nutrition they had in a day
+     * @param {*} username
+     */
+    addNutritionConsumedToday(username, type, date, increment) {
+      const user = this.getUser(username);
+
+      if (!user) {
+        return { txt: "User not found!", success: false };
+      }
+
+      const indexType = user.nutrition.findIndex((pos) => pos.type == type.toLowerCase());
+
+      if (indexType === -1) {
+        return { txt: "Nutrition type not found!", success: false };
+      }
+
+      console.log(user.nutrition[indexType].history, date);
+
+      const indexDay = user.nutrition[indexType].history.findIndex((index) => index.date == date);
+
+      user.nutrition[indexType].history[indexDay].consumed =
+        +increment + +user.nutrition[indexType].history[indexDay].consumed;
+      this.updateArray();
+
+      return { txt: `Added ${increment} to goal!`, success: true };
+    },
+
+    /**
+     * adds activity chosen to the parameter of the object corresponding to the week selected
      * @param {*} day
      * @param {*} activity
      */

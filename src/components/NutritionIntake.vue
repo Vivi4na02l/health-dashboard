@@ -15,7 +15,17 @@
       <div class="progressBar">
         <div
           class="progressFill"
-          :style="{ width: userNutritionToday.consumed == 0 ? '2%' : `${percentage}%` }"
+          :style="{
+            width:
+              userNutritionToday.consumed == 0
+                ? '2%'
+                : percentage > 100
+                  ? '100%'
+                  : `${percentage}%`,
+
+            borderTopRightRadius: percentage > 100 ? '10rem' : 0,
+            borderBottomRightRadius: percentage > 100 ? '10rem' : 0,
+          }"
         >
           <!-- progress bar filled -->
         </div>

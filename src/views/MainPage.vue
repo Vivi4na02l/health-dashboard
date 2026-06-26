@@ -14,7 +14,7 @@
       <article class="nutrition">
         <NutritionIntake
           class="component animHigher"
-          :componentList="{ name: 'Calories', unit: 'kcal' }"
+          :componentList="{ name: 'Calories', unit: 'cal' }"
           @click="this.$router.push({ name: 'Nutrition', query: { type: 'Calories' } })"
         />
         <NutritionIntake
