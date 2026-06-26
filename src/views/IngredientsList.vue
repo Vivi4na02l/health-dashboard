@@ -31,7 +31,7 @@
         <p
           class="message"
           :class="modalMsg.success ? 'messageGreen' : 'messageRed'"
-          v-show="modalMsg.txt != ''"
+          v-show="!modalMsg.success"
         >
           {{ modalMsg.txt }}
         </p>
@@ -65,6 +65,9 @@
         </footer>
       </article>
     </div>
+
+    <!-- notification -->
+    <PopupNotification :show="modalMsg.success" :message="modalMsg.txt" />
 
     <header>
       <div>
@@ -141,7 +144,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import PopupNotification from "../components/PopupNotification.vue";
+
+import { computed, ref, watch } from "vue";
 
 import { usersStore } from "@/store/users";
 import { authStore } from "@/store/auth";
@@ -153,6 +158,8 @@ const newIngredient = ref({
   calories: "",
   group: "",
 });
+
+let notificationTimer: number | undefined;
 
 const modalMsg = ref({
   success: false,
@@ -284,6 +291,17 @@ function addNewIngredient() {
     if (result.success) {
       modalMsg.value.success = result.success;
       modalMsg.value.txt = result.txt;
+
+      modal.value.modalAddIngredient = false;
+      modal.value.modalOn = false;
+
+      newIngredient.value = {
+        name: "",
+        weight: "",
+        protein: "",
+        calories: "",
+        group: "",
+      };
     }
   }
 }
@@ -303,8 +321,29 @@ function removeIngredient() {
   if (result.success) {
     modalMsg.value.success = result.success;
     modalMsg.value.txt = result.txt;
+
+    modal.value.modalRemoveIngredient = false;
+    modal.value.modalOn = false;
   }
 }
+
+// controls how long the notification is on for
+watch(
+  () => modalMsg.value,
+  (newVal) => {
+    if (newVal.success && newVal.txt) {
+      clearTimeout(notificationTimer);
+
+      notificationTimer = window.setTimeout(() => {
+        modalMsg.value = {
+          success: false,
+          txt: "",
+        };
+      }, 3500);
+    }
+  },
+  { deep: true },
+);
 </script>
 
 <style scoped>
