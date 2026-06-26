@@ -10,10 +10,13 @@
     <h4>{{ props.componentList.name }}</h4>
 
     <div class="body">
-      <span class="subtitle">{{ protein.eaten }} {{ props.componentList.unit }}</span>
+      <span class="subtitle">{{ userNutritionToday.consumed }} {{ props.componentList.unit }}</span>
 
       <div class="progressBar">
-        <div class="progressFill" :style="{ width: protein.eaten === 0 ? '2%' : `${percentage}%` }">
+        <div
+          class="progressFill"
+          :style="{ width: userNutritionToday.consumed == 0 ? '2%' : `${percentage}%` }"
+        >
           <!-- progress bar filled -->
         </div>
       </div>
@@ -31,7 +34,10 @@
 
         <div v-else>
           <span>
-            <p>{{ protein.eaten }} / {{ protein.goal }}{{ props.componentList.unit }}</p>
+            <p>
+              {{ userNutritionToday.consumed }} / {{ userNutrition.goal
+              }}{{ props.componentList.unit }}
+            </p>
           </span>
         </div>
       </transition>
@@ -42,6 +48,14 @@
 <script setup lang="ts">
 import { computed, ref, onMounted, onUnmounted } from "vue";
 
+import { usersStore } from "@/store/users";
+import { authStore } from "@/store/auth";
+
+const user = computed(() => {
+  const auth = authStore();
+  return usersStore().getUser(auth.currentUsername);
+});
+
 const props = defineProps<{
   componentList: {
     name: string;
@@ -49,24 +63,44 @@ const props = defineProps<{
   };
 }>();
 
-const protein = ref({
-  goal: 100,
-  eaten: 0,
-  left: 100,
+const userNutrition = computed(() => {
+  const indexType = user.value.nutrition.findIndex(
+    (pos: { type: string }) => pos.type === props.componentList.name.toLowerCase(),
+  );
+
+  return user.value.nutrition[indexType];
+});
+
+const userNutritionToday = computed(() => {
+  const indexDate = userNutrition.value.history.findIndex(
+    (pos: { date: string }) => pos.date === todaysDate.value,
+  );
+
+  return userNutrition.value.history[indexDate];
+});
+
+const todaysDate = computed(() => {
+  const now = new Date();
+
+  const day = String(now.getDate()).padStart(2, "0");
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const year = now.getFullYear();
+
+  return `${day}${month}${year}`;
 });
 
 const percentage = computed(() => {
-  if (protein.value.goal === 0) {
+  if (userNutrition.value.goal === 0) {
     return 0;
   }
 
-  return (protein.value.eaten / protein.value.goal) * 100;
+  return (userNutritionToday.value.consumed / userNutrition.value.goal) * 100;
 });
 
 const showPercentage = ref(false);
 
 const achieved = computed(() => {
-  if (protein.value.goal <= protein.value.eaten) {
+  if (userNutrition.value.goal <= userNutritionToday.value.consumed) {
     return true;
   } else {
     return false;
