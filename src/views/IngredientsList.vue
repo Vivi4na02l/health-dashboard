@@ -616,11 +616,25 @@ function addOrRemoveGroceryList(ingredient: string, isAdding: boolean) {
   users.addOrRemoveIngredientFromGroceryList(auth.currentUsername, ingredient, isAdding);
 }
 
-function ingredientOnCart(ingredient: string, event: boolean) {
+/**
+ * controls the checkbox states on the grocery list and the ingredient's status that's influenced by it
+ * @param ingredient
+ * @param event
+ */
+function ingredientOnCart(ingredient: string, event: Event) {
   const auth = authStore();
   const users = usersStore();
 
-  users.ingredientOnCart(auth.currentUsername, ingredient, event);
+  const checked = (event.target as HTMLInputElement).checked;
+  let addingToCart: boolean;
+
+  if (checked) {
+    addingToCart = true;
+  } else {
+    addingToCart = false;
+  }
+
+  users.ingredientOnCart(auth.currentUsername, ingredient, addingToCart);
 }
 
 // controls how long the notification is on for

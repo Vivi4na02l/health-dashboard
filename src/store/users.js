@@ -461,11 +461,17 @@ export const usersStore = defineStore("users", {
       this.updateArray();
     },
 
-    addOrRemoveIngredientFromGroceryList(username, ingredient, toShoppingList) {
+    addOrRemoveIngredientFromGroceryList(username, ingredient, addingToGroceryList) {
       const user = this.getUser(username);
       const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
 
-      user.ingredients[ingredientIndex].onShoppingList = toShoppingList;
+      user.ingredients[ingredientIndex].onShoppingList = addingToGroceryList;
+
+      // if ingredient is removed from the grocery list, then it is also automatically removed from the cart
+      if (!addingToGroceryList) {
+        user.ingredients[ingredientIndex].cart.onCart = false;
+        user.ingredients[ingredientIndex].cart.quantity = 0;
+      }
 
       this.updateArray();
     },
