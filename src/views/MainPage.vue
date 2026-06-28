@@ -45,7 +45,7 @@
         <InventoryList
           :ingredientType="'IngredientsGroceries'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Shopping', query: { type: 'Groceries' } })"
+          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Groceries' } })"
         />
       </article>
 

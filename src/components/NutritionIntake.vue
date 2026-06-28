@@ -23,8 +23,8 @@
                   ? '100%'
                   : `${percentage}%`,
 
-            borderTopRightRadius: percentage > 100 ? '10rem' : 0,
-            borderBottomRightRadius: percentage > 100 ? '10rem' : 0,
+            borderTopRightRadius: percentage >= 100 ? '10rem' : 0,
+            borderBottomRightRadius: percentage >= 100 ? '10rem' : 0,
           }"
         >
           <!-- progress bar filled -->

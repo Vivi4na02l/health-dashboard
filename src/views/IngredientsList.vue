@@ -86,7 +86,7 @@
         <!-- PANTRY -->
         <p v-else-if="type.toLowerCase() == 'pantry'">Managing available inventory</p>
         <!-- GROCERY LIST -->
-        <p v-else>Managing supermarket ingredients</p>
+        <p v-else>Managing supermarket trips</p>
       </div>
 
       <button
@@ -100,7 +100,10 @@
     </header>
 
     <section class="infoSection">
-      <div class="animHigher">
+      <div
+        v-if="type.toLowerCase() == 'ingredients' || type.toLowerCase() == 'pantry'"
+        class="animHigher"
+      >
         <h3>{{ ingredientsData.ingredients }}</h3>
         <p>Ingredients</p>
       </div>
@@ -115,9 +118,22 @@
         <p>Out of stock</p>
       </div>
 
-      <div v-if="type.toLowerCase() == 'pantry'" class="animHigher">
+      <div
+        v-if="type.toLowerCase() == 'pantry' || type.toLowerCase() == 'groceries'"
+        class="animHigher"
+      >
         <h3>{{ ingredientsData.onGroceryList }}</h3>
         <p>On groceries list</p>
+      </div>
+
+      <div v-if="type.toLowerCase() == 'groceries'" class="animHigher">
+        <h3 style="color: var(--red)">{{ ingredientsData.onGroceryList }}</h3>
+        <p>To buy</p>
+      </div>
+
+      <div v-if="type.toLowerCase() == 'groceries'" class="animHigher">
+        <h3>{{ ingredientsData.onGroceryList }}</h3>
+        <p>On the cart</p>
       </div>
     </section>
 
@@ -151,11 +167,11 @@
 
             <th>
               <p v-if="type.toLowerCase() == 'ingredients'">Weight</p>
-              <p v-else-if="type.toLowerCase() == 'pantry'">Quantity</p>
+              <p v-else>Quantity</p>
             </th>
 
             <th v-if="type.toLowerCase() == 'ingredients'">Protein</th>
-            <th v-else-if="type.toLowerCase() == 'pantry'">Status</th>
+            <th v-else>Status</th>
 
             <th v-if="type.toLowerCase() == 'ingredients'">Calories</th>
             <th v-else-if="type.toLowerCase() == 'pantry'">Grocery list</th>
@@ -168,24 +184,36 @@
           <tr
             v-for="ingredient in ingredientsArray"
             :key="ingredient"
-            :class="ingredient.quantity == 0 ? 'outOfStock' : ''"
+            :class="ingredient.quantity == 0 && type.toLowerCase() == 'pantry' ? 'outOfStock' : ''"
           >
-            <td>{{ ingredient.ingredient }}</td>
+            <td>
+              <span>
+                <input
+                  v-if="type.toLowerCase() == 'groceries'"
+                  type="checkbox"
+                  @change="ingredientOnCart(ingredient.ingredient, $event)"
+                />
+                {{ ingredient.ingredient }}
+              </span>
+            </td>
             <td>{{ ingredient.group }}</td>
 
             <td>
-              <!-- weight -->
+              <!-- weight and/or quantity-->
               <p v-if="type.toLowerCase() == 'ingredients'">{{ ingredient.weight }}g</p>
 
-              <span class="quantity" v-else-if="type.toLowerCase() == 'pantry'">
-                <button @click="changePantryQuantity(ingredient.ingredient, false)">-</button>
+              <span class="quantity" v-else>
+                <button @click="changeQuantity(ingredient.ingredient, false)">-</button>
 
                 <div>
-                  <p class="units">{{ ingredient.quantity }} units</p>
+                  <p class="units" v-if="type.toLowerCase() == 'pantry'">
+                    {{ ingredient.quantity }} units
+                  </p>
+                  <p class="units" v-else>{{ ingredient.cart.quantity }} units</p>
                   <p class="weight">{{ ingredient.weight }}g</p>
                 </div>
 
-                <button @click="changePantryQuantity(ingredient.ingredient, true)">+</button>
+                <button @click="changeQuantity(ingredient.ingredient, true)">+</button>
               </span>
             </td>
 
@@ -200,9 +228,17 @@
 
                 <span v-else class="status onList backgroundColorShift"> In stock </span>
               </span>
+
+              <span v-else>
+                <span v-if="ingredient.cart.onCart" class="status onList backgroundColorShift"
+                  >on cart</span
+                >
+
+                <span v-else class="status outOf backgroundColorShift">to buy</span>
+              </span>
             </td>
 
-            <td>
+            <td v-if="type.toLowerCase() == 'ingredients' || type.toLowerCase() == 'pantry'">
               <!-- protein or grocery list -->
               <span v-if="type.toLowerCase() == 'ingredients'"> {{ ingredient.calories }}cal </span>
 
@@ -237,6 +273,15 @@
 
               <button v-else @click="addOrRemoveGroceryList(ingredient.ingredient, false)">
                 Remove from grocery list
+              </button>
+            </td>
+
+            <td v-else class="buttons">
+              <button
+                class="btnRemove"
+                @click="addOrRemoveGroceryList(ingredient.ingredient, false)"
+              >
+                Remove from list
               </button>
             </td>
           </tr>
@@ -354,15 +399,33 @@ const ingredientsArray = computed(() => {
   ) {
     console.log(filterOutOfStock.value);
 
-    return user.value.ingredients;
+    if (type.toLowerCase() != "groceries") {
+      return user.value.ingredients;
+    } else {
+      let ingredientsOnCart = [...user.value.ingredients];
+      ingredientsOnCart = ingredientsOnCart.filter(
+        (ingredient: { onShoppingList: boolean }) => ingredient.onShoppingList == true,
+      );
+      return ingredientsOnCart;
+    }
   }
 
-  console.log(filterOutOfStock.value + "oi");
   let filteredIngredientsArray = [...user.value.ingredients];
+  if (type.toLowerCase() == "groceries") {
+    filteredIngredientsArray = filteredIngredientsArray.filter(
+      (ingredient: { onShoppingList: boolean }) => ingredient.onShoppingList == true,
+    );
+  }
 
   // orders the array by [user option]
   if (filterOrder.value == "orderAdded") {
     filteredIngredientsArray = [...user.value.ingredients];
+
+    if (type.toLowerCase() == "groceries") {
+      filteredIngredientsArray = filteredIngredientsArray.filter(
+        (ingredient: { onShoppingList: boolean }) => ingredient.onShoppingList == true,
+      );
+    }
   }
 
   if (filterOrder.value == "orderAZ") {
@@ -405,6 +468,17 @@ const ingredientsArray = computed(() => {
 
   return filteredIngredientsArray;
 });
+
+/**
+ * activates or deactivates the "out of stock" filter
+ */
+function filterOutOfStockFlicker() {
+  if (filterOutOfStock.value) {
+    filterOutOfStock.value = false;
+  } else {
+    filterOutOfStock.value = true;
+  }
+}
 
 /**
  * creates a new ingredient
@@ -520,11 +594,15 @@ function clearForm() {
   };
 }
 
-function changePantryQuantity(ingredient: string, isPlus: boolean) {
+function changeQuantity(ingredient: string, isPlus: boolean) {
   const auth = authStore();
   const users = usersStore();
 
-  users.changePantryIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+  if (type.toLowerCase() == "pantry") {
+    users.changePantryIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+  } else {
+    users.changeGroceriesIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+  }
 }
 
 /**
@@ -538,15 +616,11 @@ function addOrRemoveGroceryList(ingredient: string, isAdding: boolean) {
   users.addOrRemoveIngredientFromGroceryList(auth.currentUsername, ingredient, isAdding);
 }
 
-/**
- * activates or deactivates the "out of stock" filter
- */
-function filterOutOfStockFlicker() {
-  if (filterOutOfStock.value) {
-    filterOutOfStock.value = false;
-  } else {
-    filterOutOfStock.value = true;
-  }
+function ingredientOnCart(ingredient: string, event: boolean) {
+  const auth = authStore();
+  const users = usersStore();
+
+  users.ingredientOnCart(auth.currentUsername, ingredient, event);
 }
 
 // controls how long the notification is on for

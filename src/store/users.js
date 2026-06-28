@@ -70,6 +70,10 @@ export const usersStore = defineStore("users", {
             calories: 520,
             quantity: 0,
             onShoppingList: false,
+            cart: {
+              onCart: false,
+              quantity: 0,
+            },
           },
           {
             ingredient: "Canned tuna",
@@ -79,6 +83,10 @@ export const usersStore = defineStore("users", {
             calories: 116,
             quantity: 0,
             onShoppingList: false,
+            cart: {
+              onCart: false,
+              quantity: 0,
+            },
           },
           {
             ingredient: "Onion",
@@ -88,6 +96,10 @@ export const usersStore = defineStore("users", {
             calories: 420,
             quantity: 0,
             onShoppingList: false,
+            cart: {
+              onCart: false,
+              quantity: 0,
+            },
           },
           {
             ingredient: "Garlic",
@@ -97,6 +109,10 @@ export const usersStore = defineStore("users", {
             calories: 0,
             quantity: 0,
             onShoppingList: false,
+            cart: {
+              onCart: false,
+              quantity: 0,
+            },
           },
           {
             ingredient: "Egg",
@@ -106,6 +122,10 @@ export const usersStore = defineStore("users", {
             calories: 65,
             quantity: 0,
             onShoppingList: false,
+            cart: {
+              onCart: false,
+              quantity: 0,
+            },
           },
         ],
         recipes: [
@@ -367,7 +387,7 @@ export const usersStore = defineStore("users", {
     },
 
     /**
-     * changes the quantity of the ingredient triggered
+     * changes the quantity in the pantry of the ingredient triggered
      * @param {*} username user logged in
      * @param {*} ingredient ingredient of which the button as been clicked
      * @param {*} isPlus is true if the button clicked was "plus", false if it was the button "minus"
@@ -399,6 +419,46 @@ export const usersStore = defineStore("users", {
 
         this.updateArray();
       }
+    },
+
+    /**
+     * changes the quantity in the grocery list of the ingredient triggered
+     */
+    changeGroceriesIngredientQuantity(username, ingredient, isPlus) {
+      const user = this.getUser(username);
+      const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
+
+      if (isPlus) {
+        user.ingredients[ingredientIndex].cart.quantity++;
+
+        this.updateArray();
+      }
+
+      // decreases the quantity
+      else {
+        // only decreases the quantity of the ingredient if it isn't already at 0 quantity
+        if (user.ingredients[ingredientIndex].cart.quantity > 0) {
+          user.ingredients[ingredientIndex].cart.quantity--;
+        }
+
+        this.updateArray();
+      }
+    },
+
+    /**
+     * adds or removes a ingredient to/from the card
+     */
+    ingredientOnCart(username, ingredient, isAdding) {
+      const user = this.getUser(username);
+      const ingredientIndex = user.ingredients.findIndex((index) => index.ingredient == ingredient);
+
+      if (isAdding) {
+        user.ingredients[ingredientIndex].cart.onCart = true;
+      } else {
+        user.ingredients[ingredientIndex].cart.onCart = false;
+      }
+
+      this.updateArray();
     },
 
     addOrRemoveIngredientFromGroceryList(username, ingredient, toShoppingList) {
