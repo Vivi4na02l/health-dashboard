@@ -35,17 +35,17 @@
         <InventoryList
           :ingredientType="'Ingredients'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Ingredients' })"
+          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Ingredients' } })"
         />
         <InventoryList
           :ingredientType="'IngredientsPantry'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Pantry' })"
+          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Pantry' } })"
         />
         <InventoryList
           :ingredientType="'IngredientsGroceries'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Shopping' })"
+          @click="this.$router.push({ name: 'Shopping', query: { type: 'Groceries' } })"
         />
       </article>
 

@@ -18,6 +18,7 @@
 
 * {
   box-sizing: border-box;
+  font-family: "IBM Plex Sans", sans-serif;
 }
 
 h1,
@@ -36,11 +37,14 @@ h4 {
   font-family: "Outfit", sans-serif;
 }
 
-p,
+/* p,
 span,
-li {
+li,
+td,
+th,
+button {
   font-family: "IBM Plex Sans", sans-serif;
-}
+} */
 
 html,
 body {

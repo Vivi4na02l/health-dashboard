@@ -77,12 +77,20 @@
       <div>
         <span>
           <img src="@/assets/images/icon-ingredients.png" alt="ingredients icon" />
-          <h2>Ingredients</h2>
+          <h2>{{ type }}</h2>
         </span>
-        <p>Managing ingredients and nutritional information</p>
+        <!-- INGREDIENTS -->
+        <p v-if="type.toLowerCase() == 'ingredients'">
+          Managing ingredients and nutritional information
+        </p>
+        <!-- PANTRY -->
+        <p v-else-if="type.toLowerCase() == 'pantry'">Managing available inventory</p>
+        <!-- GROCERY LIST -->
+        <p v-else>Managing supermarket ingredients</p>
       </div>
 
       <button
+        v-if="type.toLowerCase() == 'ingredients'"
         @click="
           ((modal.modalAddIngredient = true), (modal.modalOn = true), (modal.modalType = 'add'))
         "
@@ -97,12 +105,23 @@
         <p>Ingredients</p>
       </div>
 
-      <div class="animHigher">
+      <div v-if="type.toLowerCase() == 'ingredients'" class="animHigher">
         <h3>{{ ingredientsData.groups }}</h3>
         <p>Ingredient groups</p>
       </div>
+
+      <div v-if="type.toLowerCase() == 'pantry'" class="animHigher">
+        <h3 style="color: var(--red)">{{ ingredientsData.outOfStock }}</h3>
+        <p>Out of stock</p>
+      </div>
+
+      <div v-if="type.toLowerCase() == 'pantry'" class="animHigher">
+        <h3>{{ ingredientsData.onGroceryList }}</h3>
+        <p>On groceries list</p>
+      </div>
     </section>
 
+    <!-- FILTERS -->
     <section class="filtersSection">
       <input type="text" placeholder="Search ingredient..." v-model="filterSearch" />
 
@@ -116,32 +135,103 @@
         <option value="allGroups">All groups</option>
         <option v-for="group in user.groups" :key="group" :value="group">{{ group }}</option>
       </select>
+
+      <button v-show="type.toLowerCase() == 'pantry'">Out of stock</button>
     </section>
 
+    <!-- TABLE -->
     <section class="tableSection">
       <table>
         <thead>
           <tr>
             <th>Ingredient</th>
             <th>Group</th>
-            <th>Weight</th>
-            <th>Protein</th>
-            <th>Calories</th>
+
+            <th>
+              <p v-if="type.toLowerCase() == 'ingredients'">Weight</p>
+              <p v-else-if="type.toLowerCase() == 'pantry'">Quantity</p>
+            </th>
+
+            <th v-if="type.toLowerCase() == 'ingredients'">Protein</th>
+            <th v-else-if="type.toLowerCase() == 'pantry'">Status</th>
+
+            <th v-if="type.toLowerCase() == 'ingredients'">Calories</th>
+            <th v-else-if="type.toLowerCase() == 'pantry'">Grocery list</th>
+
             <th>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          <tr v-for="ingredient in ingredientsArray" :key="ingredient">
+          <tr
+            v-for="ingredient in ingredientsArray"
+            :key="ingredient"
+            :class="ingredient.quantity == 0 ? 'outOfStock' : ''"
+          >
             <td>{{ ingredient.ingredient }}</td>
             <td>{{ ingredient.group }}</td>
-            <td>{{ ingredient.weight }}g</td>
-            <td>{{ ingredient.protein }}g</td>
-            <td>{{ ingredient.calories }}cal</td>
-            <td class="buttons">
+
+            <td>
+              <!-- weight -->
+              <p v-if="type.toLowerCase() == 'ingredients'">{{ ingredient.weight }}g</p>
+
+              <span class="quantity" v-else-if="type.toLowerCase() == 'pantry'">
+                <button @click="changePantryQuantity(ingredient.ingredient, false)">-</button>
+
+                <div>
+                  <p class="units">{{ ingredient.quantity }} units</p>
+                  <p class="weight">{{ ingredient.weight }}g</p>
+                </div>
+
+                <button @click="changePantryQuantity(ingredient.ingredient, true)">+</button>
+              </span>
+            </td>
+
+            <td>
+              <!-- protein or status -->
+              <span v-if="type.toLowerCase() == 'ingredients'"> {{ ingredient.protein }}g </span>
+
+              <span v-else-if="type.toLowerCase() == 'pantry'">
+                <span v-if="ingredient.quantity == 0" class="status outOf backgroundColorShift"
+                  >Out of stock</span
+                >
+
+                <span v-else class="status onList backgroundColorShift"> In stock </span>
+              </span>
+            </td>
+
+            <td>
+              <!-- protein or grocery list -->
+              <span v-if="type.toLowerCase() == 'ingredients'"> {{ ingredient.calories }}cal </span>
+
+              <span v-else-if="type.toLowerCase() == 'pantry'">
+                <span v-if="ingredient.onShoppingList" class="status onList backgroundColorShift">
+                  on grocery list
+                </span>
+
+                <span v-else>&#x2014;</span>
+              </span>
+            </td>
+
+            <!-- BUTTONS: add/remove OR add/remove from grocery list OR -->
+            <td v-if="type.toLowerCase() == 'ingredients'" class="buttons">
               <button class="btnEdit" @click="editIngredient(ingredient)">Edit</button>
               <button class="btnRemove" @click="isRemovingIngredient(ingredient.ingredient)">
                 Remove
+              </button>
+            </td>
+
+            <td v-else-if="type.toLowerCase() == 'pantry'" class="buttons">
+              <button
+                v-if="!ingredient.onShoppingList"
+                class="btnAddGrocery backgroundColorShift"
+                @click="addOrRemoveGroceryList(ingredient.ingredient, true)"
+              >
+                Add to grocery list
+              </button>
+
+              <button v-else @click="addOrRemoveGroceryList(ingredient.ingredient, false)">
+                Remove from grocery list
               </button>
             </td>
           </tr>
@@ -158,6 +248,10 @@ import { computed, ref, watch } from "vue";
 
 import { usersStore } from "@/store/users";
 import { authStore } from "@/store/auth";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+const type = route.query.type as string;
 
 const newIngredient = ref({
   name: "",
@@ -195,7 +289,19 @@ const user = computed(() => {
 });
 
 const ingredientsData = computed(() => {
-  return { ingredients: user.value.ingredients.length, groups: user.value.groups.length };
+  const ingredientsOutOfStock = user.value.ingredients.filter(
+    (ing: { quantity: number }) => ing.quantity == 0,
+  );
+  const ingredientsOnGroceryList = user.value.ingredients.filter(
+    (ing: { onShoppingList: boolean }) => ing.onShoppingList == true,
+  );
+
+  return {
+    ingredients: user.value.ingredients.length,
+    groups: user.value.groups.length,
+    outOfStock: ingredientsOutOfStock.length,
+    onGroceryList: ingredientsOnGroceryList.length,
+  };
 });
 
 type Ingredient = {
@@ -206,6 +312,12 @@ type Ingredient = {
   quantity: number;
   onShoppingList: boolean;
 };
+
+/**
+ * changes the order and/or filters through the array of ingredients
+ * @param array
+ * @param sort
+ */
 function orderIngredients(array: Ingredient[], sort: number) {
   return array.sort(
     (
@@ -278,6 +390,9 @@ const ingredientsArray = computed(() => {
   return filteredIngredientsArray;
 });
 
+/**
+ * creates a new ingredient
+ */
 function addNewIngredient() {
   const auth = authStore();
   const users = usersStore();
@@ -326,6 +441,10 @@ function addNewIngredient() {
   }
 }
 
+/**
+ * edit selected ingredient's info
+ * @param ingredient
+ */
 function editIngredient(ingredient: {
   ingredient: string;
   group: string;
@@ -354,6 +473,9 @@ function isRemovingIngredient(ingredient: string) {
   removingIngredient.value = ingredient;
 }
 
+/**
+ * deletes ingredient entirely
+ */
 function removeIngredient() {
   const auth = authStore();
   const users = usersStore();
@@ -369,6 +491,9 @@ function removeIngredient() {
   }
 }
 
+/**
+ * clears the ingredient create/edit form after it closes
+ */
 function clearForm() {
   newIngredient.value = {
     name: "",
@@ -377,6 +502,24 @@ function clearForm() {
     calories: "",
     group: "",
   };
+}
+
+function changePantryQuantity(ingredient: string, isPlus: boolean) {
+  const auth = authStore();
+  const users = usersStore();
+
+  users.changePantryIngredientQuantity(auth.currentUsername, ingredient, isPlus);
+}
+
+/**
+ * adds ingredient to the grocery list
+ * @param ingredient
+ */
+function addOrRemoveGroceryList(ingredient: string, isAdding: boolean) {
+  const auth = authStore();
+  const users = usersStore();
+
+  users.addOrRemoveIngredientFromGroceryList(auth.currentUsername, ingredient, isAdding);
 }
 
 // controls how long the notification is on for

@@ -39,8 +39,13 @@ header button:hover {
 
 .infoSection {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  /* grid-template-columns: 1fr 1fr; */
   gap: 2rem;
+}
+
+.infoSection h3 {
+  font-size: 2rem;
 }
 
 .infoSection div {
@@ -75,7 +80,18 @@ table {
 }
 
 th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  color: #7c7c7c;
   text-align: left;
+}
+
+th:nth-child(1) {
+  width: 30%;
+}
+
+th:nth-child(6) {
+  width: 20%;
 }
 
 th:nth-child(1),
@@ -83,7 +99,6 @@ td:nth-child(1) {
   border-top-left-radius: 1rem;
   border-bottom-left-radius: 1rem;
   padding-left: 1rem;
-  width: 30%;
 }
 
 th:nth-child(6),
@@ -91,7 +106,10 @@ td:nth-child(6) {
   border-bottom-right-radius: 1rem;
   border-top-right-radius: 1rem;
   padding-right: 1rem;
-  width: 20%;
+}
+
+.outOfStock {
+  opacity: 60%;
 }
 
 tbody tr {
@@ -103,33 +121,112 @@ td {
   padding-bottom: 1rem;
 }
 
-.buttons {
+td div {
   display: flex;
+  flex-direction: column;
+}
+
+.units {
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.weight {
+  font-size: 0.9rem;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
+.quantity button {
+  border: none;
+  border-radius: 0.5rem;
+
+  width: 1.5rem;
+  height: 1.5rem;
+
+  font-size: 1rem;
+  font-weight: 600;
+
+  background-color: #dbdbdb;
+}
+.quantity button:hover {
+  cursor: pointer;
+  background-color: #bdbdbd;
+}
+
+.buttons {
+  /* display: flex;
+  align-items: center;
+  gap: 0.5rem; */
+}
+
 .buttons button {
+  cursor: pointer;
   border: none;
   border-radius: 0.5rem;
   padding: 0.5rem;
 }
 
 .btnEdit {
+  margin-right: 0.25rem;
   background-color: var(--light-green);
 }
 .btnEdit:hover {
-  cursor: pointer;
   color: #fff;
   background-color: var(--green);
 }
 
 .btnRemove {
+  margin-left: 0.25rem;
   background-color: var(--light-red);
 }
 .btnRemove:hover {
-  cursor: pointer;
   color: #fff;
   background-color: var(--red);
+}
+
+.status {
+  border-radius: 1rem;
+  padding: 0.5rem;
+
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.outOf {
+  color: rgb(102, 0, 0);
+  background: linear-gradient(-45deg, #f0c7c7, #ffa5a5, #ffa3a3, #ffa8a8);
+}
+
+.onList {
+  color: #007608;
+  background: linear-gradient(-45deg, #c7f0c9, #aeffa5, #d6ffa3, #d8ffa8);
+}
+
+.btnAddGrocery {
+  background-color: var(--green);
+  background: linear-gradient(-45deg, #abffae, #6bff5a, #a4ff34, #c0ff72);
+}
+
+.bgGreen {
+  background: linear-gradient(-45deg, #abffae, #6bff5a, #a4ff34, #c0ff72);
+}
+
+.bgBlue {
+  background: linear-gradient(-45deg, #abfff0, #5bffff, #48ffbf, #72ffc0);
+}
+
+.bgOrange {
+  background: linear-gradient(-45deg, #ffff72, #ffc077, #ff941a, #ffff00);
+}
+
+.backgroundColorShift {
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
 }
 
 /** MODALS */
