@@ -207,21 +207,18 @@ td div {
   background: linear-gradient(-45deg, #c7f0c9, #aeffa5, #d6ffa3, #d8ffa8);
 }
 
+.onGroceryList {
+  color: #bf6600;
+  background: linear-gradient(-45deg, #ffff72, #ffd677, #ffd063, #ffffa6);
+}
+
 .btnAddGrocery {
   background-color: var(--green);
   background: linear-gradient(-45deg, #abffae, #6bff5a, #a4ff34, #c0ff72);
 }
 
-.bgGreen {
-  background: linear-gradient(-45deg, #abffae, #6bff5a, #a4ff34, #c0ff72);
-}
-
 .bgBlue {
   background: linear-gradient(-45deg, #abfff0, #5bffff, #48ffbf, #72ffc0);
-}
-
-.bgOrange {
-  background: linear-gradient(-45deg, #ffff72, #ffc077, #ff941a, #ffff00);
 }
 
 .backgroundColorShift {

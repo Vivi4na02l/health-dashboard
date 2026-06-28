@@ -136,7 +136,9 @@
         <option v-for="group in user.groups" :key="group" :value="group">{{ group }}</option>
       </select>
 
-      <button v-show="type.toLowerCase() == 'pantry'">Out of stock</button>
+      <button v-show="type.toLowerCase() == 'pantry'" @click="filterOutOfStockFlicker">
+        Out of stock
+      </button>
     </section>
 
     <!-- TABLE -->
@@ -205,7 +207,10 @@
               <span v-if="type.toLowerCase() == 'ingredients'"> {{ ingredient.calories }}cal </span>
 
               <span v-else-if="type.toLowerCase() == 'pantry'">
-                <span v-if="ingredient.onShoppingList" class="status onList backgroundColorShift">
+                <span
+                  v-if="ingredient.onShoppingList"
+                  class="status onGroceryList backgroundColorShift"
+                >
                   on grocery list
                 </span>
 
@@ -282,6 +287,7 @@ const removingIngredient = ref("");
 const filterSearch = ref("");
 const filterOrder = ref("orderAdded");
 const filterGroup = ref("allGroups");
+const filterOutOfStock = ref(false);
 
 const user = computed(() => {
   const auth = authStore();
@@ -343,11 +349,15 @@ const ingredientsArray = computed(() => {
   if (
     filterSearch.value == "" &&
     filterOrder.value == "orderAdded" &&
-    filterGroup.value == "allGroups"
+    filterGroup.value == "allGroups" &&
+    !filterOutOfStock.value
   ) {
+    console.log(filterOutOfStock.value);
+
     return user.value.ingredients;
   }
 
+  console.log(filterOutOfStock.value + "oi");
   let filteredIngredientsArray = [...user.value.ingredients];
 
   // orders the array by [user option]
@@ -382,6 +392,12 @@ const ingredientsArray = computed(() => {
     filteredIngredientsArray = filteredIngredientsArray.filter(
       (ingredient: { ingredient: string; group: string }) =>
         ingredient.group.toLowerCase() == filterGroup.value.toLowerCase(),
+    );
+  }
+
+  if (filterOutOfStock.value) {
+    filteredIngredientsArray = filteredIngredientsArray.filter(
+      (ingredient: { quantity: number }) => ingredient.quantity == 0,
     );
   }
 
@@ -520,6 +536,17 @@ function addOrRemoveGroceryList(ingredient: string, isAdding: boolean) {
   const users = usersStore();
 
   users.addOrRemoveIngredientFromGroceryList(auth.currentUsername, ingredient, isAdding);
+}
+
+/**
+ * activates or deactivates the "out of stock" filter
+ */
+function filterOutOfStockFlicker() {
+  if (filterOutOfStock.value) {
+    filterOutOfStock.value = false;
+  } else {
+    filterOutOfStock.value = true;
+  }
 }
 
 // controls how long the notification is on for
