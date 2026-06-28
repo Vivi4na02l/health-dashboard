@@ -238,14 +238,19 @@ export const usersStore = defineStore("users", {
         return { txt: "Nutrition type not found!", success: false };
       }
 
-      console.log(user.nutrition[indexType].history, date);
-
       const indexDay = user.nutrition[indexType].history.findIndex((index) => index.date == date);
 
       user.nutrition[indexType].history[indexDay].consumed =
         +increment + +user.nutrition[indexType].history[indexDay].consumed;
-      this.updateArray();
 
+      // if goal hasn't been reached out yet, it checks if the goal was surpassed. If it was, it registers that the goal was surpassed
+      if (!user.nutrition[indexType].history[indexDay].reachedGoal) {
+        if (user.nutrition[indexType].history[indexDay].consumed > user.nutrition[indexType].goal) {
+          user.nutrition[indexType].history[indexDay].reachedGoal = true;
+        }
+      }
+
+      this.updateArray();
       return { txt: `Added ${increment} to goal!`, success: true };
     },
 
