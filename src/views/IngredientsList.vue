@@ -127,12 +127,14 @@
       </div>
 
       <div v-if="type.toLowerCase() == 'groceries'" class="animHigher">
-        <h3 style="color: var(--red)">{{ ingredientsData.onGroceryList }}</h3>
+        <h3 style="color: var(--red)">
+          {{ ingredientsData.onGroceryList - ingredientsData.onCart }}
+        </h3>
         <p>To buy</p>
       </div>
 
       <div v-if="type.toLowerCase() == 'groceries'" class="animHigher">
-        <h3>{{ ingredientsData.onGroceryList }}</h3>
+        <h3>{{ ingredientsData.onCart }}</h3>
         <p>On the cart</p>
       </div>
     </section>
@@ -154,6 +156,10 @@
 
       <button v-show="type.toLowerCase() == 'pantry'" @click="filterOutOfStockFlicker">
         Out of stock
+      </button>
+
+      <button v-show="type.toLowerCase() == 'groceries'" @click="filterNotOnCartFlicker">
+        Not on cart
       </button>
     </section>
 
@@ -192,6 +198,7 @@
                   v-if="type.toLowerCase() == 'groceries'"
                   type="checkbox"
                   @change="ingredientOnCart(ingredient.ingredient, $event)"
+                  :checked="ingredient.cart.onCart"
                 />
                 {{ ingredient.ingredient }}
               </span>
@@ -333,6 +340,7 @@ const filterSearch = ref("");
 const filterOrder = ref("orderAdded");
 const filterGroup = ref("allGroups");
 const filterOutOfStock = ref(false);
+const filterNotOnCart = ref(false);
 
 const user = computed(() => {
   const auth = authStore();
@@ -343,8 +351,13 @@ const ingredientsData = computed(() => {
   const ingredientsOutOfStock = user.value.ingredients.filter(
     (ing: { quantity: number }) => ing.quantity == 0,
   );
+
   const ingredientsOnGroceryList = user.value.ingredients.filter(
     (ing: { onShoppingList: boolean }) => ing.onShoppingList == true,
+  );
+
+  const ingredientsOnCart = user.value.ingredients.filter(
+    (ing: { cart: { onCart: boolean } }) => ing.cart.onCart == true,
   );
 
   return {
@@ -352,6 +365,7 @@ const ingredientsData = computed(() => {
     groups: user.value.groups.length,
     outOfStock: ingredientsOutOfStock.length,
     onGroceryList: ingredientsOnGroceryList.length,
+    onCart: ingredientsOnCart.length,
   };
 });
 
@@ -395,10 +409,9 @@ const ingredientsArray = computed(() => {
     filterSearch.value == "" &&
     filterOrder.value == "orderAdded" &&
     filterGroup.value == "allGroups" &&
-    !filterOutOfStock.value
+    !filterOutOfStock.value &&
+    !filterNotOnCart.value
   ) {
-    console.log(filterOutOfStock.value);
-
     if (type.toLowerCase() != "groceries") {
       return user.value.ingredients;
     } else {
@@ -464,6 +477,12 @@ const ingredientsArray = computed(() => {
     );
   }
 
+  if (filterNotOnCart.value) {
+    filteredIngredientsArray = filteredIngredientsArray.filter(
+      (ingredient: { cart: { onCart: boolean } }) => ingredient.cart.onCart == false,
+    );
+  }
+
   console.log(filteredIngredientsArray);
 
   return filteredIngredientsArray;
@@ -477,6 +496,14 @@ function filterOutOfStockFlicker() {
     filterOutOfStock.value = false;
   } else {
     filterOutOfStock.value = true;
+  }
+}
+
+function filterNotOnCartFlicker() {
+  if (filterNotOnCart.value) {
+    filterNotOnCart.value = false;
+  } else {
+    filterNotOnCart.value = true;
   }
 }
 
