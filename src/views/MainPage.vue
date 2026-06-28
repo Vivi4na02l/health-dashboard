@@ -15,17 +15,17 @@
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Calories', unit: 'cal' }"
-          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Calories' } })"
+          @click="$router.push({ name: 'Nutrition', query: { type: 'Calories' } })"
         />
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Water', unit: 'L' }"
-          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Water' } })"
+          @click="$router.push({ name: 'Nutrition', query: { type: 'Water' } })"
         />
         <NutritionIntake
           class="component animHigher"
           :componentList="{ name: 'Protein', unit: 'g' }"
-          @click="this.$router.push({ name: 'Nutrition', query: { type: 'Protein' } })"
+          @click="$router.push({ name: 'Nutrition', query: { type: 'Protein' } })"
         />
       </article>
 
@@ -35,17 +35,17 @@
         <InventoryList
           :ingredientType="'Ingredients'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Ingredients' } })"
+          @click="$router.push({ name: 'Ingredients', query: { type: 'Ingredients' } })"
         />
         <InventoryList
           :ingredientType="'IngredientsPantry'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Pantry' } })"
+          @click="$router.push({ name: 'Ingredients', query: { type: 'Pantry' } })"
         />
         <InventoryList
           :ingredientType="'IngredientsGroceries'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Ingredients', query: { type: 'Groceries' } })"
+          @click="$router.push({ name: 'Ingredients', query: { type: 'Groceries' } })"
         />
       </article>
 
@@ -55,14 +55,14 @@
         <InventoryList
           :ingredientType="'Recipes'"
           class="component animHigher"
-          @click="this.$router.push({ name: 'Recipes' })"
+          @click="$router.push({ name: 'Recipes' })"
         />
       </article>
 
       <!-- Activity -->
       <h3>Activity</h3>
       <article class="activity">
-        <WeekDay class="component animHigher" @click="this.$router.push({ name: 'Week' })" />
+        <WeekDay class="component animHigher" @click="$router.push({ name: 'Week' })" />
       </article>
     </div>
   </aside>
