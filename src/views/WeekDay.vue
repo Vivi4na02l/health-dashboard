@@ -219,6 +219,9 @@ function addActivity() {
   .activity {
     width: 80%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .activity img {
@@ -228,12 +231,19 @@ function addActivity() {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
+  .activity button {
+    align-self: center;
+  }
 }
 
 @media screen and (min-width: 401px) and (max-width: 767px) {
   .activity {
     width: 60%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .activity img {
@@ -243,12 +253,19 @@ function addActivity() {
     margin-top: 1rem;
     margin-bottom: 1rem;
   }
+
+  .activity button {
+    align-self: center;
+  }
 }
 
 @media screen and (min-width: 768px) {
   .activity {
     width: 40%;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 
   .activity img {
@@ -257,6 +274,10 @@ function addActivity() {
 
     margin-top: 1rem;
     margin-bottom: 1rem;
+  }
+
+  .activity button {
+    align-self: center;
   }
 }
 
@@ -349,7 +370,7 @@ section > * {
   border-radius: 0.5rem;
   padding: 1rem;
 
-  background-color: var(--light-green);
+  background-color: #fff;
 }
 
 .btnOpenModal {

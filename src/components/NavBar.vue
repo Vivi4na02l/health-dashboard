@@ -12,8 +12,11 @@
         <li
           v-for="item in items"
           :key="item.key"
-          :class="{ active: $route.name === item.key }"
-          @click="changePage(item.key, $event)"
+          :class="{
+            active:
+              $route.name === item.key && (!item.query || $route.query.type === item.query.type),
+          }"
+          @click="changePage(item, $event)"
         >
           {{ item.label }}
         </li>
@@ -33,7 +36,7 @@
             v-for="item in items"
             :key="item.key"
             @click="
-              changePage(item.key);
+              changePage(item);
               isMenuOpen = false;
             "
           >
@@ -58,36 +61,16 @@ export default {
       items: [
         { key: "Home", label: "Dashboard" },
         { key: "Week", label: "Activities" },
-        { key: "Water", label: "Water" },
-        { key: "Protein", label: "Protein" },
-        { key: "Pantry", label: "Pantry" },
-        { key: "Shopping", label: "Shopping list" },
+        { key: "Nutrition", label: "Water", query: { type: "Water" } },
+        { key: "Nutrition", label: "Protein", query: { type: "Protein" } },
+        { key: "Nutrition", label: "Calories", query: { type: "Calories" } },
+        { key: "Ingredients", label: "Ingredients", query: { type: "Ingredients" } },
+        { key: "Ingredients", label: "Pantry", query: { type: "Pantry" } },
+        { key: "Ingredients", label: "Grocery List", query: { type: "Groceries" } },
         { key: "Recipes", label: "Recipes" },
       ],
-
-      // sliderStyle: {
-      //   width: "0px",
-      //   transform: "translateX(0px)",
-      // },
     };
   },
-
-  // mounted() {
-  //   this.$nextTick(() => {
-  //     this.moveSlider(this.$el.querySelector(".active"));
-  //   });
-  // },
-
-  // watch: {
-  //   $route() {
-  //     this.$nextTick(() => {
-  //       const activeElement = this.$el.querySelector(".active");
-  //       if (activeElement) {
-  //         this.moveSlider(activeElement);
-  //       }
-  //     });
-  //   },
-  // },
 
   methods: {
     logout() {
@@ -95,18 +78,18 @@ export default {
       this.$router.push({ name: "Auth" });
     },
 
-    changePage(page) {
-      this.$router.push({ name: `${page}` });
+    changePage(item) {
+      console.log(item);
+
+      if (item.query) {
+        this.$router.push({
+          name: `${item.key}`,
+          query: item.query,
+        });
+      } else {
+        this.$router.push({ name: `${item.key}` });
+      }
     },
-
-    // moveSlider(element) {
-    //   const { offsetLeft, offsetWidth } = element;
-
-    //   this.sliderStyle = {
-    //     width: offsetWidth + "px",
-    //     transform: `translateX(${offsetLeft}px)`,
-    //   };
-    // },
   },
 };
 </script>
