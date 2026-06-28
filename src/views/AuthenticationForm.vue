@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section class="backgroundColorShift">
     <transition name="fade" mode="out-in">
       <!-- REGISTER -->
       <div v-if="isRegister" id="register">

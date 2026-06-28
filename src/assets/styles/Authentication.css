@@ -8,7 +8,7 @@ section {
 }
 
 div {
-  background-color: var(--white);
+  background-color: #fff;
 }
 
 form {
@@ -34,7 +34,8 @@ button {
   border-radius: 0.5rem;
   padding: 1rem;
 
-  background-color: var(--green);
+  color: #fff;
+  background-color: var(--dark-green);
 }
 button:hover {
   background-color: #6de15b;
