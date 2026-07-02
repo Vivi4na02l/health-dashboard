@@ -1,44 +1,88 @@
-# health-dashboard
+# NutriDash
 
-This template should help get you started developing with Vue 3 in Vite.
+NutriDash is a personal nutrition and kitchen management dashboard built with Vue and TypeScript. It combines nutrition tracking, pantry management, grocery planning, recipe organization, and activity tracking into a single application.
 
-## Recommended IDE Setup
+Rather than focusing only on calorie counting, NutriDash aims to simplify everyday food management by helping users keep track of what they eat, what ingredients they already own, what they need to buy, and what they plan to cook.
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+🔗 Live Demo  
+[Visit the website](https://vivi4na02l.github.io/health-dashboard/)
 
-## Recommended Browser Setup
+## Preview
+![Landing page preview](./health_screenshot.png)
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Features
 
-## Customize configuration
+### Dashboard
+* Daily nutrition overview
+* Protein, calories, and water progress
+* Pantry summary
+* Grocery list overview
+* Planned activities
+* Configurable dashboard widgets [under development]
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### Nutrition Tracking
+* Daily protein, calorie, and water goals
+* Support for cutting and bulking calorie targets [under development]
+* Daily history and progress tracking [under development]
 
-## Project Setup
+### Ingredients
+* Create reusable ingredients
+* Store nutritional information per 100g
+* Organize ingredients into categories
+* Reuse ingredients across pantry, recipes, grocery lists, and nutrition tracking
 
-```sh
-npm install
-```
+### Pantry
+* Inventory management
+* Ingredient search
+* Multiple sorting and filtering options
+* Stock availability tracking
+* Quick transfer to grocery list
 
-### Compile and Hot-Reload for Development
+### Grocery List
+* Shopping progress tracking
+* Adjustable quantities
+* Purchased / pending status
+* Optional purchase cost logging for statistics [under development]
 
-```sh
-npm run dev
-```
+### Recipes [under development]
+* Save custom recipes
+* Store ingredients and quantities 
+* Step-by-step preparation instructions
+* Optional recipe image
+* Automatic nutrition calculation
+* Automatically remove used ingredients from pantry when cooking
 
-### Compile and Minify for Production
+### Activities
+* Daily activity planner
+* Streak tracking [under development]
 
-```sh
-npm run build
-```
+### Statistics [under development]
+* Protein consumption
+* Water intake
+* Calorie history
+* Grocery expenses
 
-### Lint with [ESLint](https://eslint.org/)
+## Tech Stack
+* Vue
+* TypeScript and JavaScript
+* CSS
 
-```sh
-npm run lint
-```
+## Architecture
+One of the primary goals of NutriDash was to design a coherent data model capable of supporting multiple interconnected features.
+
+Rather than treating each module independently, the application revolves around reusable entities such as ingredients and recipes. These entities are shared across nutrition tracking, pantry management, grocery lists, meal planning, and recipes, requiring consistent relationships and synchronized state throughout the application.
+
+As a result, the project places a stronger emphasis on application logic, data modeling, and state management than on visual design. The interface is intentionally functional, with the main objective being to build a scalable and maintainable architecture capable of supporting increasingly complex workflows.
+
+## This project focuses on:
+* Component-based architecture
+* State management
+* Reusable data models
+* Responsive UI design
+* Clean user experience
+* Practical CRUD operations across interconnected modules
+
+> **Note:** NutriDash was originally started using JavaScript. During a later development phase, the project was modernized by introducing TypeScript for new components and features. As a result, the current codebase contains both JavaScript and TypeScript while the migration progresses.
+
+## Status
+🚧 Currently under development.
