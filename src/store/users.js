@@ -476,6 +476,21 @@ export const usersStore = defineStore("users", {
       this.updateArray();
     },
 
+    purchaseComplete(username) {
+      const user = this.getUser(username);
+
+      for (const ingredient of user.ingredients) {
+        if (ingredient.onShoppingList && ingredient.cart.onCart) {
+          ingredient.quantity += ingredient.cart.quantity;
+
+          // removes ingredient from grocery list
+          ingredient.cart.onCart = false;
+          ingredient.cart.quantity = 0;
+          ingredient.onShoppingList = false;
+        }
+      }
+    },
+
     addRecipe(username, recipe) {
       const user = this.getUser(username);
 

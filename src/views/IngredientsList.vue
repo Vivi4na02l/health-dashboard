@@ -68,6 +68,26 @@
           </button>
         </footer>
       </article>
+
+      <article v-show="modal.modalPurchase" class="purchaseModal">
+        <header>
+          <h2>Purchase complete! 🎉</h2>
+          <p>The selected ingredients have now been added to the pantry.</p>
+        </header>
+
+        <label for="amountPaid">Amount paid (optional):</label>
+        <input type="number" id="amountPaid" v-model="amountPaid" />
+
+        <footer>
+          <button class="btnConfirm" @click="groceriesPrices">Confirm</button>
+          <button
+            class="btnCancel"
+            @click="((modal.modalPurchase = false), (modal.modalOn = false))"
+          >
+            Close
+          </button>
+        </footer>
+      </article>
     </div>
 
     <!-- notification -->
@@ -96,6 +116,12 @@
         "
       >
         Add ingredient
+      </button>
+      <button
+        v-else-if="type.toLowerCase() == 'groceries'"
+        @click="((modal.modalPurchase = true), (modal.modalOn = true), purchaseComplete())"
+      >
+        Purchase completed
       </button>
     </header>
 
@@ -332,7 +358,10 @@ const modal = ref({
   modalType: "add",
   modalAddIngredient: false,
   modalRemoveIngredient: false,
+  modalPurchase: false,
 });
+
+const amountPaid = ref(0);
 
 const removingIngredient = ref("");
 
@@ -663,6 +692,15 @@ function ingredientOnCart(ingredient: string, event: Event) {
 
   users.ingredientOnCart(auth.currentUsername, ingredient, addingToCart);
 }
+
+function purchaseComplete() {
+  const auth = authStore();
+  const users = usersStore();
+
+  users.purchaseComplete(auth.currentUsername);
+}
+
+function groceriesPrices() {}
 
 // controls how long the notification is on for
 watch(

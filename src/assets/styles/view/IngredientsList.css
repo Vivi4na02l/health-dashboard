@@ -312,11 +312,17 @@ article button {
   color: #fff;
 }
 
-.deletingModal header {
+.deletingModal header,
+.purchaseModal header {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+
   padding-bottom: 1rem;
   border-bottom: solid 0.1rem var(--grey);
 }
-.deletingModal footer {
+.deletingModal footer,
+.purchaseModal footer {
   padding-top: 1rem;
   border-top: solid 0.1rem var(--grey);
 }
